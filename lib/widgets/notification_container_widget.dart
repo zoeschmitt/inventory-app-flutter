@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:inventory/widgets/small_container.dart';
 
-class ItemContainerWidget extends StatelessWidget {
-  
-  final String name;
-  final String sku;
-  final String amount;
-
-  const ItemContainerWidget({
-    Key key, this.name, this.sku, this.amount,
+class NotificationContainerWidget extends StatelessWidget {
+  final String title;
+  final String body;
+  final String date;
+  const NotificationContainerWidget({
+    Key key,
+    this.title,
+    this.body,
+    this.date,
   }) : super(key: key);
 
   @override
@@ -18,13 +18,13 @@ class ItemContainerWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            //put item image here
+            //put image or icon here
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               color: Colors.grey[300],
             ),
-            height: 75,
-            width: 75,
+            height: 70,
+            width: 70,
           ),
           SizedBox(width: 15.0),
           Flexible(
@@ -33,24 +33,29 @@ class ItemContainerWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      name,
+                      title,
                       style: TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 20.0,
                           color: Colors.black,
                           fontWeight: FontWeight.w600),
                       maxLines: 1,
                       textAlign: TextAlign.start,
                     ),
-                    SmallContainer(text: amount),
+                    Text(
+                      date,
+                      style: TextStyle(fontSize: 15.0, color: Colors.black26),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ],
                 ),
+                SizedBox(height: 5),
                 Text(
-                  sku,
-                  style: TextStyle(fontSize: 14.0, color: Colors.black),
+                  body,
+                  style: TextStyle(fontSize: 15.0, color: Colors.black),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
                 ),

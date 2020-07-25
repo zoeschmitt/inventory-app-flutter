@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../main.dart';
 
-class MyHomePage extends StatelessWidget{
+class MyHomePage extends StatelessWidget {
   final _searchQueryController = TextEditingController();
   final _scrollController = ScrollController();
 
@@ -30,96 +30,102 @@ class MyHomePage extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Styles.backgroundCol,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-              left: 25.0, right: 25, top: 55, bottom: 45),
-          child: Column(
-            children: <Widget>[
-              TopMenuWidget(),
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  MenuItemWidget(
-                    title: 'Scan',
-                    icon: Icons.stay_current_portrait,
-                  ),
-                  SizedBox(width: 14),
-                  MenuItemWidget(
-                    title: 'Add',
-                    icon: Icons.add_box,
-                  ),
-                  SizedBox(width: 14),
-                  MenuItemWidget(
-                    title: 'Export',
-                    icon: Icons.file_upload,
-                  ),
-                ],
-              ),
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Inventory",
-                    style: TextStyle(
-                      fontSize: 26,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.normal,
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(
+                left: 25.0, right: 25, top: 20, bottom: 45),
+            child: Column(
+              children: <Widget>[
+                TopMenuWidget(),
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    MenuItemWidget(
+                      title: 'Scan',
+                      icon: Icons.stay_current_portrait,
                     ),
-                  ),
-                  Text(
-                    "524 Items",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black26,
-                      fontWeight: FontWeight.normal,
+                    SizedBox(width: 14),
+                    MenuItemWidget(
+                      title: 'Add',
+                      icon: Icons.add_box,
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: <Widget>[
-                  SearchBarWidget(
-                      searchQueryController: _searchQueryController),
-                  SizedBox(width: 10),
-                  GestureDetector(
+                    SizedBox(width: 14),
+                    MenuItemWidget(
+                      title: 'Export',
+                      icon: Icons.file_upload,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "Inventory",
+                      style: TextStyle(
+                        fontSize: 26,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    Text(
+                      "524 Items",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black26,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: <Widget>[
+                    SearchBarWidget(
+                        searchQueryController: _searchQueryController),
+                    SizedBox(width: 10),
+                    GestureDetector(
+                        onTap: () {
+                          print("object");
+                        },
+                        child: FilterWidget()),
+                  ],
+                ),
+                SizedBox(height: 20),
+                ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
                       onTap: () {
-                        print("object");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ItemPage()),
+                        );
                       },
-                      child: FilterWidget()),
-                ],
-              ),
-              //SizedBox(height: 5),
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ItemPage()),
-                      );
-                    },
-                    child: ItemContainerWidget(
-                      name: products[index].name ?? "Loading...",
-                      sku: products[index].sku ?? ".......",
-                      amount: products[index].amount ?? " ",
-                    ),
-                  );
-                },
-                itemCount: products.length,
-                shrinkWrap: true,
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(height: 10.0);
-                },
-              ),
-            ],
+                      child: AbsorbPointer(
+                        child: ItemContainerWidget(
+                          name: products[index].name ?? "Loading...",
+                          sku: products[index].sku ?? ".......",
+                          amount: products[index].amount ?? " ",
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: products.length,
+                  shrinkWrap: true,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(height: 10.0);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+
 }

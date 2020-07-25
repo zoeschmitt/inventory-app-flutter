@@ -36,7 +36,7 @@ class SearchBarWidget extends StatelessWidget {
                       child: TextField(
                         maxLines: 1,
                         controller: _searchQueryController,
-                        autofocus: true,
+                        autofocus: false,
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.normal,
