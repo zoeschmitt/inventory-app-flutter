@@ -60,14 +60,6 @@ class SearchBarWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.select_all,
-                  color: Colors.black26,
-                  size: 26,
-                ),
-              ),
             ],
           ),
         ),
