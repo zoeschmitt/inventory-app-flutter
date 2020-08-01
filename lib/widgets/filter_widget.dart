@@ -3,24 +3,17 @@ import 'package:inventory/models/inventory_model.dart';
 import 'package:inventory/widgets/modal_title_widget.dart';
 import 'package:provider/provider.dart';
 
-class FilterWidget extends StatefulWidget {
-  const FilterWidget({
-    Key key,
-  }) : super(key: key);
 
-  @override
-  _FilterWidgetState createState() => _FilterWidgetState();
-}
-
-class _FilterWidgetState extends State<FilterWidget> {
-  List<String> _dropVals = <String>[
+class FilterWidget extends StatelessWidget {
+  
+  final List<String> _dropVals = <String>[
+    "All",
     'San Antonio, TX',
     'Austin, TX',
     'Dallas, TX',
     'Houston, TX'
   ];
 
-  String dropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +51,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                       ModalTitleWidget(title: "Filter Items"),
                       SizedBox(height: 20.0),
                       Consumer<InventoryModel>(//                  <--- Consumer
-                          builder: (context, myModel, child) {
+                          builder: (context, myModel, _) {
                         return Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 5),

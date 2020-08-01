@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "325214923902",
+    "firebase_url": "https://inventory-82d55.firebaseio.com",
+    "project_id": "inventory-82d55",
+    "storage_bucket": "inventory-82d55.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325214923902:android:7c0e50702ad5b221d57c2f",
+        "android_client_info": {
+          "package_name": "com.inv.inventory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "325214923902-o9uc4mcshta0ph54v0n33cmsg2de0vhr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5K8hMT1ta4ywuPElbDABvkbIPc9pg4gQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "325214923902-o9uc4mcshta0ph54v0n33cmsg2de0vhr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "325214923902-jl8l1vqmjatnkf5024om3o6bdvc6uktk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.inv.inventory"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
