@@ -1,15 +1,32 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:inventory/services/firebase_auth_service.dart';
+import 'package:inventory/utils/loading.dart';
 import 'package:inventory/utils/styles.dart';
-import 'package:inventory/widgets/auth_field_widget.dart';
 import 'package:inventory/widgets/buttons/main_button.dart';
 import 'package:inventory/widgets/circle_widget.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  final Function toggleView;
+  SignUpPage({this.toggleView});
+
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+  String error = '';
+  bool loading = false;
+
+  // text field state
+  String email = '';
+  String password = '';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         overflow: Overflow.clip,
@@ -52,6 +69,11 @@ class SignUpPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height / 6),
+                    Text(
+                      error,
+                      style: TextStyle(fontSize: 14.0, color: Colors.red),
+                    ),
+                    SizedBox(height: 10),
                     Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -65,43 +87,92 @@ class SignUpPage extends StatelessWidget {
                           ]),
                       child: Padding(
                         padding: const EdgeInsets.all(25.0),
-                        child: Column(
-                          children: <Widget>[
-                            AuthFieldWidget(),
-                            SizedBox(height: 15),
-                            AuthFieldWidget(),
-                            SizedBox(height: 15),
-                            AuthFieldWidget(),
-                            SizedBox(height: 15),
-                            AuthFieldWidget(),
-                            SizedBox(height: 15),
-                            MainButton(
-                              title: "Sign Up",
-                            ),
-                          ],
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              TextFormField(
+                                //controller: widget.controller,
+                                //enabled: widget.enabled,
+                                style: Styles.authStyle,
+                                textCapitalization: TextCapitalization.none,
+                                autovalidate: false,
+                                //inputFormatters: widget.inputFormatters,
+                                minLines: 1,
+                                decoration: Styles.returnDec("Name"),
+                                //validator: widget.valFunc,
+                              ),
+                              SizedBox(height: 15),
+                              TextFormField(
+                                //controller: widget.controller,
+                                //enabled: widget.enabled,
+                                style: Styles.authStyle,
+                                textCapitalization: TextCapitalization.none,
+                                autovalidate: false,
+                                onChanged: (val) {
+                                  setState(() => email = val);
+                                },
+                                //inputFormatters: widget.inputFormatters,
+                                minLines: 1,
+                                decoration: Styles.returnDec("Email"),
+                                validator: (val) =>
+                                    val.isEmpty || !val.contains("@")
+                                        ? 'Enter a valid email'
+                                        : null,
+                              ),
+                              SizedBox(height: 15),
+                              TextFormField(
+                                obscureText: true,
+                                //controller: widget.controller,
+                                //enabled: widget.enabled,
+                                style: Styles.authStyle,
+                                textCapitalization: TextCapitalization.none,
+                                autovalidate: false,
+                                onChanged: (val) {
+                                  setState(() => password = val);
+                                },
+                                //inputFormatters: widget.inputFormatters,
+                                minLines: 1,
+                                decoration: Styles.returnDec("Password"),
+                                validator: (val) => val.length < 6
+                                    ? 'Your password must be at least 6 characters long'
+                                    : null,
+                              ),
+                              SizedBox(height: 15),
+                              MainButton(
+                                title: "Sign Up",
+                                onPressed: () async {
+                                  if (_formKey.currentState.validate()) {
+                                    setState(() => loading = true);
+                                    dynamic result = await _auth
+                                        .registerWithEmailAndPassword(
+                                            email, password);
+                                    if (result == null) {
+                                      setState(() {
+                                        loading = false;
+                                        error = 'Please supply a valid email';
+                                      });
+                                    }
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            "Forgot Password?",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
+                      child: GestureDetector(
+                        onTap: () => widget.toggleView(),
+                        child: Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
                           ),
-                          Text(
-                            "Sign Up",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ],

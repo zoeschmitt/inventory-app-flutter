@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:inventory/models/item.dart';
 import 'package:inventory/models/user_notification.dart';
 import 'package:inventory/pages/settings_page.dart';
+import 'package:inventory/services/firebase_auth_service.dart';
 import 'package:inventory/utils/styles.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/custom_field_widget.dart';
@@ -74,6 +75,7 @@ class _TopMenuWidgetState extends State<TopMenuWidget> {
     Item(name: "A Product", sku: "02342834923", amount: "227"),
     Item(name: "Product", sku: "02342834923", amount: "227")
   ];
+  final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -132,11 +134,12 @@ class _TopMenuWidgetState extends State<TopMenuWidget> {
               size: 36,
               color: Colors.black,
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
+            onPressed: () async {
+              await _auth.signOut();
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => SettingsPage()),
+              // );
             })
       ],
     );

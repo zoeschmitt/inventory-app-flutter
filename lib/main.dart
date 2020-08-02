@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/inventory_model.dart';
-import 'package:inventory/pages/home_page.dart';
-import 'package:inventory/pages/sign_up_in/sign_in_page.dart';
-import 'package:inventory/pages/sign_up_in/sign_up_page.dart';
+import 'package:inventory/pages/auth_page.dart';
+import 'package:inventory/services/firebase_auth_service.dart';
 import 'package:provider/provider.dart';
+
+import 'models/user.dart';
 
 void main() {
   runApp(
@@ -15,12 +16,15 @@ void main() {
 class InventoryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<InventoryModel>(
-      create: (context) => InventoryModel(),
+    return MultiProvider(
+      providers: [
+        StreamProvider<User>.value(value: AuthService().user),
+        ChangeNotifierProvider<InventoryModel>(
+            create: (context) => InventoryModel()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        //home: MyHomePage(),
-        home: SignUpPage (),
+        home: AuthPage(),
       ),
     );
   }

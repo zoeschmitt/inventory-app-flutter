@@ -4,9 +4,10 @@ import 'package:inventory/utils/styles.dart';
 class MainButton extends StatelessWidget {
 
   final String title;
+  final GestureTapCallback onPressed;
 
   const MainButton({
-    Key key, this.title,
+    Key key, this.title, this.onPressed,
   }) : super(key: key);
 
   @override
@@ -25,7 +26,7 @@ class MainButton extends StatelessWidget {
                 right: 20,
                 top: 15,
                 bottom: 15),
-            onPressed: () {},
+            onPressed: onPressed,
             child: Text(
               title,
               style: TextStyle(
