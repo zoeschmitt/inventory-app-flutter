@@ -36,7 +36,7 @@ class ItemsListWidget extends StatelessWidget {
       itemCount: items.allTasks.length,
       shrinkWrap: true,
       separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(height: 10.0);
+        return SizedBox(height: 15.0);
       },
      )
     );

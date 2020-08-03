@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({
     Key key,
     @required TextEditingController searchQueryController,
-  }) : _searchQueryController = searchQueryController, super(key: key);
+  })  : _searchQueryController = searchQueryController,
+        super(key: key);
 
   final TextEditingController _searchQueryController;
 
@@ -26,8 +29,8 @@ class SearchBarWidget extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Icon(
-                      Icons.search,
+                    const Icon(
+                      SFSymbols.search,
                       color: Colors.black26,
                       size: 26,
                     ),
@@ -37,12 +40,11 @@ class SearchBarWidget extends StatelessWidget {
                         maxLines: 1,
                         controller: _searchQueryController,
                         autofocus: false,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16.0),
-                        textCapitalization:
-                            TextCapitalization.sentences,
+                        style: GoogleFonts.sourceSansPro(
+                            fontSize: 18,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w400),
+                        textCapitalization: TextCapitalization.sentences,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           focusedBorder: InputBorder.none,
@@ -50,9 +52,8 @@ class SearchBarWidget extends StatelessWidget {
                           errorBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
                           hintText: "Search",
-                          hintStyle: TextStyle(
-                              color: Colors.black26,
-                              fontSize: 18),
+                          hintStyle:
+                              TextStyle(color: Colors.black26, fontSize: 18),
                         ),
                         //onChanged: (query) => updateSearchQuery,
                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/image_carousel_widget.dart';
 import 'package:inventory/widgets/info_container_widget.dart';
@@ -42,11 +43,10 @@ class _ItemPageState extends State<ItemPage> {
                       child: Text(
                         'Product Name',
                         maxLines: 2,
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: GoogleFonts.libreFranklin(
+                        fontSize: 30,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600),
                       ),
                     ),
                     SizedBox(width: 20),
@@ -60,11 +60,10 @@ class _ItemPageState extends State<ItemPage> {
                 child: Text(
                   'SKU 29347204732',
                   maxLines: 2,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black38,
-                    fontWeight: FontWeight.normal,
-                  ),
+                  style: GoogleFonts.libreFranklin(
+                        fontSize: 16,
+                        color: Colors.black26,
+                        fontWeight: FontWeight.w400),
                 ),
               ),
               SizedBox(height: 30),
@@ -111,11 +110,10 @@ class _ItemPageState extends State<ItemPage> {
                         Text(
                           'Notes',
                           maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: GoogleFonts.libreFranklin(
+                        fontSize: 20,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600),
                         ),
                         CustomButton(icon: Icons.add,)
                       ],

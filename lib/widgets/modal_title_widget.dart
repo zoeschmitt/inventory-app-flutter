@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'buttons/custom_button.dart';
 
 class ModalTitleWidget extends StatelessWidget {
   final String title;
   const ModalTitleWidget({
-    Key key, this.title,
+    Key key,
+    this.title,
   }) : super(key: key);
 
   @override
@@ -16,11 +18,8 @@ class ModalTitleWidget extends StatelessWidget {
         Text(
           title,
           maxLines: 2,
-          style: TextStyle(
-            fontSize: 28,
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-          ),
+          style: GoogleFonts.libreFranklin(
+              fontSize: 30, color: Colors.black87, fontWeight: FontWeight.w600),
         ),
         GestureDetector(
             onTap: () {

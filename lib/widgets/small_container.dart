@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/utils/styles.dart';
 
 class SmallContainer extends StatelessWidget {
   const SmallContainer({
@@ -12,15 +14,18 @@ class SmallContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.grey[300]),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          color: Colors.white),
       child: Padding(
-        padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
+        padding: const EdgeInsets.only(
+            top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
         child: Center(
           child: Text(
             text,
-            style:
-                TextStyle(fontSize: 14.0, color: Colors.black87),
+            style: GoogleFonts.sourceSansPro(
+                fontSize: 16,
+                color: Colors.black45,
+                fontWeight: FontWeight.w600),
             maxLines: 1,
             textAlign: TextAlign.start,
           ),

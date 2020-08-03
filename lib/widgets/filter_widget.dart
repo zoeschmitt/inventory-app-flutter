@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/models/inventory_model.dart';
 import 'package:inventory/widgets/modal_title_widget.dart';
 import 'package:provider/provider.dart';
 
-
 class FilterWidget extends StatelessWidget {
-  
   final List<String> _dropVals = <String>[
     "All",
     'San Antonio, TX',
@@ -13,7 +13,6 @@ class FilterWidget extends StatelessWidget {
     'Dallas, TX',
     'Houston, TX'
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +25,8 @@ class FilterWidget extends StatelessWidget {
         padding: const EdgeInsets.all(4.0),
         child: Center(
           child: IconButton(
-            icon: Icon(
-              Icons.tune,
+            icon: const Icon(
+              SFSymbols.slider_horizontal_3,
               size: 28.0,
               color: Colors.black26,
             ),
@@ -53,32 +52,38 @@ class FilterWidget extends StatelessWidget {
                       Consumer<InventoryModel>(//                  <--- Consumer
                           builder: (context, myModel, _) {
                         return Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(14)),
-                              child: DropdownButton<String>(
-                                isExpanded: true,
-                                value: myModel.location,
-                                icon: Icon(Icons.arrow_drop_down),
-                                iconSize: 42,
-                                underline: SizedBox(),
-                                onChanged: (newValue) {
-                                  print("new location set");
-                                  final model = Provider.of<InventoryModel>(context, listen: false);
-                                  model.filterLocation(newValue);
-                                },
-                                items: _dropVals
-                                    .map((value) => DropdownMenuItem(
-                                          child: Text(
-                                            value,
-                                            style: TextStyle(color: Colors.black),
-                                          ),
-                                          value: value,
-                                        ))
-                                    .toList(),
-                              ));
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(14)),
+                            child: DropdownButton<String>(
+                              style: GoogleFonts.sourceSansPro(
+                                  fontSize: 18,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w400),
+                              isExpanded: true,
+                              value: myModel.location,
+                              icon: Icon(Icons.arrow_drop_down),
+                              iconSize: 42,
+                              underline: SizedBox(),
+                              onChanged: (newValue) {
+                                print("new location set");
+                                final model = Provider.of<InventoryModel>(
+                                    context,
+                                    listen: false);
+                                model.filterLocation(newValue);
+                              },
+                              items: _dropVals
+                                  .map((value) => DropdownMenuItem(
+                                        child: Text(
+                                          value,
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                        value: value,
+                                      ))
+                                  .toList(),
+                            ));
                       })
                     ],
                   ),

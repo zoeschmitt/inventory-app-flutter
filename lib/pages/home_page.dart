@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:inventory/pages/scanner_page.dart';
 import 'package:inventory/utils/styles.dart';
 import 'package:inventory/widgets/circle_widget.dart';
@@ -25,10 +26,11 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: OpenContainer(
           closedBuilder: (_, openContainer) {
             return Padding(
-                padding: const EdgeInsets.all(15),
-                child: Icon(
-                  Icons.select_all,
+                padding: const EdgeInsets.all(10),
+                child: const Icon(
+              SFSymbols.qrcode_viewfinder,
                   color: Colors.white,
+                  size: 36,
                 ));
           },
           closedColor: Styles.custBlue,
@@ -38,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
           openBuilder: (_, closeContainer) {
             return ScannerPage(context: _, closedContainer: closeContainer);
           }),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Styles.backgroundCol,
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(

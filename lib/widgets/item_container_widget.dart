@@ -1,14 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/widgets/small_container.dart';
 
 class ItemContainerWidget extends StatelessWidget {
-  
   final String name;
   final String sku;
   final String amount;
 
   const ItemContainerWidget({
-    Key key, this.name, this.sku, this.amount,
+    Key key,
+    this.name,
+    this.sku,
+    this.amount,
   }) : super(key: key);
 
   @override
@@ -38,9 +43,9 @@ class ItemContainerWidget extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       name,
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.black,
+                      style: GoogleFonts.sourceSansPro(
+                          fontSize: 22,
+                          color: Colors.black87,
                           fontWeight: FontWeight.w600),
                       maxLines: 1,
                       textAlign: TextAlign.start,
@@ -48,11 +53,26 @@ class ItemContainerWidget extends StatelessWidget {
                     SmallContainer(text: amount),
                   ],
                 ),
-                Text(
-                  sku,
-                  style: TextStyle(fontSize: 14.0, color: Colors.black),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    const Icon(
+                      SFSymbols.barcode,
+                      color: Colors.black54,
+                      size: 20,
+                    ),
+                    SizedBox(width: 7),
+                    Text(
+                      sku,
+                      style: GoogleFonts.sourceSansPro(
+                          fontSize: 18,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w400),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                    ),
+                  ],
                 ),
               ],
             ),

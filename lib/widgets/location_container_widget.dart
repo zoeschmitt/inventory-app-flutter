@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/utils/styles.dart';
 
 class LocationContainerWidget extends StatefulWidget {
   const LocationContainerWidget({
@@ -20,7 +22,7 @@ class _LocationContainerWidgetState extends State<LocationContainerWidget> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: Colors.grey[200],
+              color: Styles.backgroundCol,
             ),
             child: Padding(
               padding: const EdgeInsets.only(
@@ -34,20 +36,20 @@ class _LocationContainerWidgetState extends State<LocationContainerWidget> {
                       children: <Widget>[
                         Text(
                           "Location",
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
+                          style: GoogleFonts.libreFranklin(
+                        fontSize: 20,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600),
                           maxLines: 1,
                           textAlign: TextAlign.start,
                         ),
                         SizedBox(height: 5),
                         Text(
                           "1234 Example Rd, Austin TX 78260",
-                          style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.black38,
-                              fontWeight: FontWeight.w300),
+                          style: GoogleFonts.libreFranklin(
+                        fontSize: 15,
+                        color: Colors.black38,
+                        fontWeight: FontWeight.w400),
                           maxLines: 2,
                           textAlign: TextAlign.start,
                         ),

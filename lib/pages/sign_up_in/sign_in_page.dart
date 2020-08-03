@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/services/firebase_auth_service.dart';
 import 'package:inventory/utils/loading.dart';
 import 'package:inventory/utils/styles.dart';
@@ -162,18 +163,19 @@ class _SignInPageState extends State<SignInPage> {
                         children: <Widget>[
                           Text(
                             "Forgot Password?",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
+                            style: GoogleFonts.sourceSansPro(
+                        fontSize: 15,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w400),
                           ),
                           GestureDetector(
                             onTap: () => widget.toggleView(),
                             child: Text(
                               "Sign Up",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14.0,
-                              ),
+                              style: GoogleFonts.sourceSansPro(
+                        fontSize: 15,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600),
                             ),
                           ),
                         ],

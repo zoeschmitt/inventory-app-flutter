@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/utils/styles.dart';
 
 class CustomFieldWidget extends StatefulWidget {
   
@@ -36,7 +38,10 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
       children: <Widget>[
         Text(
           widget.fieldTitle,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13.0),
+          style: GoogleFonts.sourceSansPro(
+                        fontSize: 14,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600),
         ),
         SizedBox(
           height: 8,
@@ -45,7 +50,10 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           initialValue: widget.text,
           controller: widget.controller,
           enabled: widget.enabled,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 16.0),
+          style: GoogleFonts.sourceSansPro(
+                        fontSize: 16,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w400),
           textCapitalization: TextCapitalization.sentences,
           autovalidate: false,
           inputFormatters: widget.inputFormatters,
@@ -53,7 +61,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
             filled: true,
-            fillColor: Colors.grey[200],
+            fillColor: Styles.backgroundCol,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(9.0),
               borderSide: BorderSide.none,

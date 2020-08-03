@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:inventory/utils/styles.dart';
 
 class ImageCarouselWidget extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
                     width: MediaQuery.of(context).size.width,
                     //margin: EdgeInsets.symmetric(horizontal: 1.0),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Styles.backgroundCol,
                       borderRadius:
                           BorderRadius.all(Radius.circular(15)),
                     ),

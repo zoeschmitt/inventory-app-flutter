@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Styles {
-
-  static const Color backgroundCol = Color(0xffF1F2F6);
+  static const Color backgroundCol = Color(0xffEFF0F3);
   static const Color custBlue = Color(0xff4879EC);
-  static const TextStyle authHintStyle = TextStyle(
-      color: Colors.black26, fontWeight: FontWeight.normal, fontSize: 16.0);
-  static const TextStyle authStyle = TextStyle(
-      color: Colors.black, fontWeight: FontWeight.w600, fontSize: 16.0);
+
+  static TextStyle authHintStyle = GoogleFonts.sourceSansPro(
+      fontSize: 16, color: Colors.black26, fontWeight: FontWeight.w400);
+
+  static TextStyle authStyle = GoogleFonts.sourceSansPro(
+      fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600);
 
   static returnDec(String hint) {
     return InputDecoration(

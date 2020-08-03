@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/utils/styles.dart';
 
 class ViewCOAReportWidget extends StatelessWidget {
   const ViewCOAReportWidget({
@@ -12,32 +15,27 @@ class ViewCOAReportWidget extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: BoxDecoration(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(20)),
-              color: Colors.grey[200],
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: Styles.backgroundCol,
             ),
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 16.0,
-                  bottom: 16.0,
-                  left: 23.0,
-                  right: 23.0),
+                  top: 16.0, bottom: 16.0, left: 23.0, right: 23.0),
               child: Row(
                 children: <Widget>[
                   Icon(
-                    Icons.pie_chart,
+                    SFSymbols.chart_pie_fill,
                     size: 60,
-                    color: Colors.black,
+                    color: Styles.custBlue,
                   ),
                   SizedBox(width: 15),
                   Text(
                     'View COA Report',
                     maxLines: 2,
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: GoogleFonts.libreFranklin(
+                        fontSize: 22,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600),
                   ),
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NotificationContainerWidget extends StatelessWidget {
   final String title;
@@ -37,16 +38,19 @@ class NotificationContainerWidget extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       title,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600),
+                      style: GoogleFonts.sourceSansPro(
+                        fontSize: 20,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600),
                       maxLines: 1,
                       textAlign: TextAlign.start,
                     ),
                     Text(
                       date,
-                      style: TextStyle(fontSize: 15.0, color: Colors.black26),
+                      style: GoogleFonts.sourceSansPro(
+                        fontSize: 16,
+                        color: Colors.black26,
+                        fontWeight: FontWeight.w400),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
@@ -55,7 +59,10 @@ class NotificationContainerWidget extends StatelessWidget {
                 SizedBox(height: 5),
                 Text(
                   body,
-                  style: TextStyle(fontSize: 15.0, color: Colors.black),
+                  style: GoogleFonts.sourceSansPro(
+                        fontSize: 16,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w400),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
                 ),

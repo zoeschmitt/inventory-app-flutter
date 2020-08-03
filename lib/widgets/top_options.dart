@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 
 import 'buttons/custom_button.dart';
 
@@ -17,7 +18,7 @@ class TopOptions extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pop();
           },
-          child: CustomButton(icon: Icons.arrow_back_ios),
+          child: CustomButton(icon: SFSymbols.chevron_left),
         ),
         Row(
           children: <Widget>[

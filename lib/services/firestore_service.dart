@@ -1,18 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DataService {
+class FirestoreService {
   final String uid;
-  DataService({ this.uid });
+  FirestoreService({ this.uid });
 
-  // collection reference
-  final CollectionReference brewCollection = Firestore.instance.collection('brews');
+  final CollectionReference userCollection = Firestore.instance.collection('users');
 
-  Future<void> updateUserData(String sugars, String name, int strength) async {
-    return await brewCollection.document(uid).setData({
-      'sugars': sugars,
+  Future<void> updateUserData(String name) async {
+    return await userCollection.document(uid).setData({
       'name': name,
-      'strength': strength,
     });
+  }
+
   }
 
   // // brew list from snapshot
@@ -48,4 +47,3 @@ class DataService {
   //   return brewCollection.document(uid).snapshots()
   //     .map(_userDataFromSnapshot);
   // }
-}

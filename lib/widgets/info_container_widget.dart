@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/utils/styles.dart';
 
 class InfoContainerWidget extends StatelessWidget {
   final String label;
@@ -30,28 +32,24 @@ class InfoContainerWidget extends StatelessWidget {
                 ),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(
-                top: 18.0, bottom: 18, left: 8, right: 8),
+            padding:
+                const EdgeInsets.only(top: 18.0, bottom: 18, left: 8, right: 8),
             child: Center(
               child: Text(
                 innerTxt,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: GoogleFonts.libreFranklin(
+                    fontSize: 18,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600),
               ),
             ),
           ),
         ),
-        SizedBox(height: 12),
+        SizedBox(height: 7),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black87,
-            fontWeight: FontWeight.w500,
-          ),
+          style: GoogleFonts.sourceSansPro(
+              fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w600),
         ),
       ],
     );
