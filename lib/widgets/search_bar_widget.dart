@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/models/inventory_model.dart';
+import 'package:provider/provider.dart';
 
-class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({
-    Key key,
-    @required TextEditingController searchQueryController,
-  })  : _searchQueryController = searchQueryController,
-        super(key: key);
+class SearchBarWidget extends StatefulWidget {
 
-  final TextEditingController _searchQueryController;
+  @override
+  _SearchBarWidgetState createState() => _SearchBarWidgetState();
+}
+
+class _SearchBarWidgetState extends State<SearchBarWidget> {
+  TextEditingController _controller;
+
+void initState() {
+  super.initState();
+  _controller = TextEditingController();
+}
+
+void dispose() {
+  _controller.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
+    final model = Provider.of<InventoryModel>(context, listen: false);
     return Flexible(
       child: Container(
         decoration: BoxDecoration(
@@ -38,13 +51,16 @@ class SearchBarWidget extends StatelessWidget {
                     Flexible(
                       child: TextField(
                         maxLines: 1,
-                        controller: _searchQueryController,
+                        controller: _controller,
                         autofocus: false,
                         style: GoogleFonts.sourceSansPro(
                             fontSize: 18,
                             color: Colors.black87,
                             fontWeight: FontWeight.w400),
                         textCapitalization: TextCapitalization.sentences,
+                        onChanged: (String value) { 
+                          model.searchService(value);
+                        },
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           focusedBorder: InputBorder.none,

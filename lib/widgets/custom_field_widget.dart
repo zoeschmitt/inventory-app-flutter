@@ -9,20 +9,22 @@ class CustomFieldWidget extends StatefulWidget {
   final String fieldTitle;
   final bool enabled;
   final TextEditingController controller;
-  final String text;
+  final String initialText;
   final Function valFunc;
+  final Function onChanged;
   final List<TextInputFormatter> inputFormatters;
   final double maxLines;
+  final TextCapitalization textCap;
 
   CustomFieldWidget({
     Key key,
     this.fieldTitle,
     this.enabled,
     this.controller,
-    this.text,
+    this.initialText,
     this.valFunc,
     this.inputFormatters,
-    this.maxLines = 1,
+    this.maxLines = 1, this.textCap, this.onChanged,
   }) : super(key: key);
   @override
   _CustomFieldWidgetState createState() => _CustomFieldWidgetState();
@@ -47,14 +49,14 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           height: 8,
         ),
         TextFormField(
-          initialValue: widget.text,
+          initialValue: widget.initialText,
           controller: widget.controller,
           enabled: widget.enabled,
           style: GoogleFonts.sourceSansPro(
                         fontSize: 16,
                         color: Colors.black87,
                         fontWeight: FontWeight.w400),
-          textCapitalization: TextCapitalization.sentences,
+          textCapitalization: widget.textCap,
           autovalidate: false,
           inputFormatters: widget.inputFormatters,
           minLines: 1,
@@ -68,6 +70,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
             ),
           ),
           validator: widget.valFunc,
+          onChanged: widget.onChanged,
         ),
       ],
     );

@@ -19,6 +19,7 @@ class ItemContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width - 50,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -28,11 +29,12 @@ class ItemContainerWidget extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(15)),
               color: Colors.grey[300],
             ),
-            height: 75,
-            width: 75,
+            height: MediaQuery.of(context).size.width / 4.8,
+            width: MediaQuery.of(context).size.width / 4.8,
           ),
-          SizedBox(width: 15.0),
+          SizedBox(width: 13.0),
           Flexible(
+            fit: FlexFit.tight,
             child: Column(
               //mainAxisAlignment: MainAxisAlignment.,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,15 +43,19 @@ class ItemContainerWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      name,
-                      style: GoogleFonts.sourceSansPro(
-                          fontSize: 22,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w600),
-                      maxLines: 1,
-                      textAlign: TextAlign.start,
+                    Flexible(
+                      fit: FlexFit.tight,
+                      child: Text(
+                        name,
+                        style: GoogleFonts.sourceSansPro(
+                            fontSize: 20,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600),
+                        maxLines: 3,
+                        textAlign: TextAlign.start,
+                      ),
                     ),
+                    SizedBox(width: 5),
                     SmallContainer(text: amount),
                   ],
                 ),

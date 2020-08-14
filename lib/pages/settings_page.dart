@@ -5,6 +5,8 @@ import 'package:inventory/services/firebase_auth_service.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/settings_option.dart';
 
+import 'modals/account_modal.dart';
+
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -52,49 +54,44 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SizedBox(height: 40),
                 GestureDetector(
-                  onTap: () {
-
-                  },
+                    onTap: () => _accountModal(context),
                     child: SettingsOption(
-                  title: 'Account',
-                  icon: SFSymbols.person_fill,
-                )),
+                      title: 'Account',
+                      icon: SFSymbols.person_fill,
+                    )),
                 SizedBox(height: 20),
                 GestureDetector(
-                  onTap: () {
-                    
-                  },
+                    onTap: () {},
                     child: SettingsOption(
-                  title: 'Export',
-                  icon: SFSymbols.square_arrow_up_fill,
-                )),
+                      title: 'Export',
+                      icon: SFSymbols.square_arrow_up_fill,
+                    )),
                 SizedBox(height: 20),
                 GestureDetector(
-                  onTap: () {
-                    
-                  },
+                    onTap: () {},
                     child: SettingsOption(
-                  title: 'Share',
-                  icon: Icons.share,
-                )),
+                      title: 'Share',
+                      icon: Icons.share,
+                    )),
                 SizedBox(height: 20),
                 GestureDetector(
-                  onTap: () {
-                    print("object");
-                  },
+                    onTap: () {
+                      print("object");
+                    },
                     child: SettingsOption(
-                  title: 'Privacy',
-                  icon: SFSymbols.shield_fill,
-                )),
+                      title: 'Privacy',
+                      icon: SFSymbols.shield_fill,
+                    )),
                 SizedBox(height: 20),
                 GestureDetector(
-                  onTap: () async {
-                    await _auth.signOut();
-                  },
+                    onTap: () async {
+                      Navigator.of(context).pop();
+                      await _auth.signOut();
+                    },
                     child: SettingsOption(
-                  title: 'Logout',
-                  icon: SFSymbols.arrow_left_circle_fill,
-                ))
+                      title: 'Logout',
+                      icon: SFSymbols.arrow_left_circle_fill,
+                    ))
               ],
             ),
           ),
@@ -102,6 +99,22 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-}
 
+  _accountModal(BuildContext context) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.93,
+        child: AccountModal(),
+      ),
+    );
+  }
+}
 

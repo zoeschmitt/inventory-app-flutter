@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/models/item.dart';
 import 'package:inventory/pages/modals/add_item_modal.dart';
 import 'package:inventory/pages/modals/new_item_modal.dart';
-import 'package:inventory/pages/modals/notifications_modal.dart';
 import 'package:inventory/pages/settings_page.dart';
 
 class TopMenuWidget extends StatefulWidget {
@@ -22,16 +21,16 @@ class _TopMenuWidgetState extends State<TopMenuWidget> {
   final _searchQueryController = TextEditingController();
   final _scrollController = ScrollController();
 
-  final products = [
-    Item(name: "Product", sku: "02342834923", amount: "227"),
-    Item(name: "Lorem Ipsum", sku: "02342834923", amount: "227"),
-    Item(name: "A Product", sku: "02342834923", amount: "227"),
-    Item(name: "Product", sku: "02342834923", amount: "227"),
-    Item(name: "Product", sku: "02342834923", amount: "227"),
-    Item(name: "Lorem Ipsum", sku: "02342834923", amount: "227"),
-    Item(name: "A Product", sku: "02342834923", amount: "227"),
-    Item(name: "Product", sku: "02342834923", amount: "227")
-  ];
+  // final products = [
+  //   Item(name: "Product", sku: "02342834923", amount: "227"),
+  //   Item(name: "Lorem Ipsum", sku: "02342834923", amount: "227"),
+  //   Item(name: "A Product", sku: "02342834923", amount: "227"),
+  //   Item(name: "Product", sku: "02342834923", amount: "227"),
+  //   Item(name: "Product", sku: "02342834923", amount: "227"),
+  //   Item(name: "Lorem Ipsum", sku: "02342834923", amount: "227"),
+  //   Item(name: "A Product", sku: "02342834923", amount: "227"),
+  //   Item(name: "Product", sku: "02342834923", amount: "227")
+  // ];
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -75,16 +74,6 @@ class _TopMenuWidgetState extends State<TopMenuWidget> {
         SizedBox(width: 5),
         IconButton(
             icon: const Icon(
-              SFSymbols.bell_fill,
-              size: 34,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              _notificationsModal(context);
-            }),
-        SizedBox(width: 5),
-        IconButton(
-            icon: const Icon(
               SFSymbols.gear,
               size: 34,
               color: Colors.black,
@@ -96,23 +85,6 @@ class _TopMenuWidgetState extends State<TopMenuWidget> {
               );
             })
       ],
-    );
-  }
-
-  _notificationsModal(BuildContext context) {
-    showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
-      ),
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.93,
-        child: NotificationsModal(),
-      ),
     );
   }
 
@@ -172,7 +144,7 @@ class _TopMenuWidgetState extends State<TopMenuWidget> {
       isScrollControlled: true,
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.93,
-        child: AddItemModal(searchQueryController: _searchQueryController, products: products),
+        //child: AddItemModal(searchQueryController: _searchQueryController, products: products),
       ),
     );
   }

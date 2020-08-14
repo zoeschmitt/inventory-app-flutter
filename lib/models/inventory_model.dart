@@ -1,26 +1,40 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:inventory/models/item.dart';
+import 'package:inventory/services/product_service.dart';
 
-import 'package:inventory/models/list_item.dart';
-
-class InventoryModel with ChangeNotifier{
+class InventoryModel with ChangeNotifier {
   String _location = "All";
   String _category = " ";
-  List<ListItem> _itemsList = [ListItem(id: "913324973", name: "Lorem Ipsum", sku: "238472394", amount: "227"),
-  ListItem(id: "913324973", name: "Lorem Ipsum", sku: "238472394", amount: "227"),
-  ListItem(id: "913324973", name: "Lorem Ipsum", sku: "238472394", amount: "227"),
-  ListItem(id: "913324973", name: "Lorem Ipsum", sku: "238472394", amount: "227"),
-  ListItem(id: "913324973", name: "Lorem Ipsum", sku: "238472394", amount: "227"),
-  ListItem(id: "913324973", name: "Lorem Ipsum", sku: "238472394", amount: "227"),
-  ListItem(id: "913324973", name: "Lorem Ipsum", sku: "238472394", amount: "227"),
-  ];
+  List<Item> _products;
+  ProductService service = ProductService();
 
+  List<Item> get products => _products;
+  String get location => _location;
+  String get category => _category;
 
-UnmodifiableListView<ListItem> get allTasks => UnmodifiableListView(_itemsList);
-String get location => _location;
-String get category => _category;
+  InventoryModel() {
+    productService();
+  }
+
+  void productService() {
+    print("productService");
+    service.fetchProducts().then((value) {
+      _products = value;
+      notifyListeners();
+    }, onError: (error) {
+      print(error);
+    });
+  }
+
+   void searchService(String prod) {
+     print("searchService");
+    service.searchProducts(prod).then((value) {
+      _products = value;
+      notifyListeners();
+    }, onError: (error) {
+      print(error);
+    });
+  }
 
   void filterLocation(String location) {
     _location = location;
@@ -35,13 +49,11 @@ String get category => _category;
   }
 
   void addItem(Item item) {
-    
     //await new list
     notifyListeners();
   }
 
   void deleteItem(String id) {
-    
     //await new list
     notifyListeners();
   }
@@ -61,5 +73,5 @@ String get category => _category;
   //   _tasks.remove(task);
   //   notifyListeners();
   // }
-  
+
 }

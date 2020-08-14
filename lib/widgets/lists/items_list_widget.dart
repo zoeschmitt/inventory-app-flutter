@@ -8,37 +8,55 @@ class ItemsListWidget extends StatelessWidget {
   const ItemsListWidget({
     Key key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     print("list built");
-    return Consumer<InventoryModel>(
-        builder: (context, items, _) => items.allTasks == null ? CircularProgressIndicator() :
-     ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ItemPage()),
-            );
-          },
-          child: AbsorbPointer(
-            child: ItemContainerWidget(
-              name: items.allTasks[index].name ?? "Loading...",
-              sku: items.allTasks[index].sku ?? ".......",
-              amount: items.allTasks[index].amount ?? " ",
-            ),
-          ),
-        );
-      },
-      itemCount: items.allTasks.length,
-      shrinkWrap: true,
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(height: 15.0);
-      },
-     )
-    );
+    return Consumer<InventoryModel>( 
+        builder: (context, model, _) => model.products == null
+            ? CircularProgressIndicator()
+            : ListView.separated(           
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return model.products.isEmpty
+                      ? Text("pull to refresh")
+                      : ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index1) {                           
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ItemPage()),
+                                );
+                              },
+                              child: AbsorbPointer(
+                                child: ItemContainerWidget(
+                                  name: model.products[index].data.variations
+                                              .length <
+                                          2
+                                      ? model.products[index].data.name
+                                      : model.products[index].data
+                                          .variations[index1].data.name,
+                                  sku: "$index " " $index1",
+                                  amount: "200",
+                                ),
+                              ),
+                            );
+                          },
+                          itemCount:
+                              model.products[index].data.variations.length,
+                          shrinkWrap: true,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(height: 15.0);
+                          },
+                        );
+                },
+                itemCount: model.products.isEmpty ? 1 : model.products.length,
+                shrinkWrap: true,
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(height: 15.0);
+                },
+              ));
   }
 }

@@ -22,6 +22,16 @@ class _NewItemModalState extends State<NewItemModal> {
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
 
+  final _formKey = GlobalKey<FormState>();
+  String name = '';
+  String category = '';
+  String sku = '';
+  String location = '';
+  String price = '';
+  String quantity = '';
+  String other = '';
+  String other1 = '';
+
   Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
     String error = 'No Error Dectected';
@@ -45,9 +55,6 @@ class _NewItemModalState extends State<NewItemModal> {
       print(e.toString());
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) {
       print("mount error");
       return;
@@ -65,7 +72,6 @@ class _NewItemModalState extends State<NewItemModal> {
       child: Container(
         clipBehavior: Clip.antiAlias,
         child: AssetThumb(
-
           asset: asset,
           height: (MediaQuery.of(context).size.height * widget.photosMultiplier)
               .toInt(),
@@ -152,19 +158,6 @@ class _NewItemModalState extends State<NewItemModal> {
                                 ],
                               )
                             : getImageContainer(index),
-                        // : Container(
-                        //     //child: index == 0 ? Icon(Icons.add) : Container(),
-                        //     //put item image here
-                        //     decoration: BoxDecoration(
-                        //       borderRadius: BorderRadius.all(
-                        //           Radius.circular(index == 0 ? 12 : 15)),
-                        //       color: Styles.backgroundCol,
-                        //     ),
-                        //     height: MediaQuery.of(context).size.height *
-                        //         widget.photosMultiplier,
-                        //     width: MediaQuery.of(context).size.height *
-                        //         widget.photosMultiplier,
-                        //   ),
                       );
                     },
                     shrinkWrap: true,
@@ -180,69 +173,108 @@ class _NewItemModalState extends State<NewItemModal> {
           SizedBox(height: 20.0),
           Padding(
             padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-            child: Column(
-              children: <Widget>[
-                CustomFieldWidget(
-                  fieldTitle: "Name",
-                ),
-                SizedBox(height: 10),
-                CustomFieldWidget(
-                  fieldTitle: "Category",
-                ),
-                SizedBox(height: 10),
-                CustomFieldWidget(
-                  fieldTitle: "SKU",
-                ),
-                SizedBox(height: 10),
-                CustomFieldWidget(
-                  fieldTitle: "Location",
-                ),
-                SizedBox(height: 10),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: CustomFieldWidget(
-                        fieldTitle: "Price",
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  CustomFieldWidget(
+                    textCap: TextCapitalization.words,
+                    enabled: true,
+                    fieldTitle: "Name",
+                    initialText: "",
+                    valFunc: (val) =>
+                        val.isEmpty ? 'Please enter a name' : null,
+                    onChanged: (val) => setState(() => name = val),
+                  ),
+                  SizedBox(height: 10),
+                  CustomFieldWidget(
+                    fieldTitle: "Category",
+                    initialText: "",
+                    valFunc: (val) =>
+                        val.isEmpty ? 'Please enter a name' : null,
+                    onChanged: (val) => setState(() => name = val),
+                    textCap: TextCapitalization.words,
+                    enabled: true,
+                  ),
+                  SizedBox(height: 10),
+                  CustomFieldWidget(
+                    fieldTitle: "SKU",
+                    initialText: "",
+                    valFunc: (val) =>
+                        val.isEmpty ? 'Please enter a name' : null,
+                    onChanged: (val) => setState(() => name = val),
+                    textCap: TextCapitalization.words,
+                    enabled: true,
+                  ),
+                  SizedBox(height: 10),
+                  CustomFieldWidget(
+                    fieldTitle: "Location",
+                    initialText: "",
+                    valFunc: (val) =>
+                        val.isEmpty ? 'Please enter a name' : null,
+                    onChanged: (val) => setState(() => name = val),
+                    textCap: TextCapitalization.words,
+                    enabled: true,
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: CustomFieldWidget(
+                          fieldTitle: "Price",
+                          initialText: "",
+                    valFunc: (val) =>
+                        val.isEmpty ? 'Please enter a name' : null,
+                    onChanged: (val) => setState(() => name = val),
+                    textCap: TextCapitalization.words,
+                    enabled: true,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: CustomFieldWidget(
-                        fieldTitle: "Quantity",
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: CustomFieldWidget(
+                          fieldTitle: "Quantity",
+                          initialText: "",
+                    valFunc: (val) =>
+                        val.isEmpty ? 'Please enter a name' : null,
+                    onChanged: (val) => setState(() => name = val),
+                    textCap: TextCapitalization.words,
+                    enabled: true,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: CustomFieldWidget(
-                        fieldTitle: "Price",
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: CustomFieldWidget(
+                          fieldTitle: "Price",
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: CustomFieldWidget(
-                        fieldTitle: "Quantity",
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: CustomFieldWidget(
+                          fieldTitle: "Quantity",
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: CustomFieldWidget(
-                        fieldTitle: "Weight",
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: CustomFieldWidget(
+                          fieldTitle: "Weight",
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                MainButton(
-                  title: "Create Item",
-                  onPressed: () {
-                    //api call to create item
-                  },
-                ),
-              ],
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  MainButton(
+                    title: "Create Item",
+                    onPressed: () {
+                      //api call to create item
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],

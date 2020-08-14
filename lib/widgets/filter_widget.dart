@@ -14,6 +14,52 @@ class FilterWidget extends StatelessWidget {
     'Houston, TX'
   ];
 
+  final List<String> _categories = <String>[
+    "All",
+    'San Antonio, TX',
+    'Austin, TX',
+    'Dallas, TX',
+    'Houston, TX'
+  ];
+
+  final List<String> _location = <String>[
+    "All",
+    'San Antonio, TX',
+    'Austin, TX',
+    'Dallas, TX',
+    'Houston, TX'
+  ];
+
+  Widget returnDropDown(List<String> items, String value, Function onChanged) {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        decoration: BoxDecoration(
+            color: Colors.grey[200], borderRadius: BorderRadius.circular(14)),
+        child: DropdownButton<String>(
+          style: GoogleFonts.sourceSansPro(
+              fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w400),
+          isExpanded: true,
+          value: value,
+          icon: Icon(Icons.arrow_drop_down),
+          iconSize: 42,
+          underline: SizedBox(),
+          onChanged: (newValue) { onChanged(); },
+          items: items
+              .map((value) => DropdownMenuItem(
+                    child: Text(
+                      value,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    value: value,
+                  ))
+              .toList(),
+        ));
+  }
+
+  void dropdownAction() {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,39 +97,44 @@ class FilterWidget extends StatelessWidget {
                       SizedBox(height: 20.0),
                       Consumer<InventoryModel>(//                  <--- Consumer
                           builder: (context, myModel, _) {
-                        return Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
-                            decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(14)),
-                            child: DropdownButton<String>(
-                              style: GoogleFonts.sourceSansPro(
-                                  fontSize: 18,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w400),
-                              isExpanded: true,
-                              value: myModel.location,
-                              icon: Icon(Icons.arrow_drop_down),
-                              iconSize: 42,
-                              underline: SizedBox(),
-                              onChanged: (newValue) {
-                                print("new location set");
-                                final model = Provider.of<InventoryModel>(
-                                    context,
-                                    listen: false);
-                                model.filterLocation(newValue);
-                              },
-                              items: _dropVals
-                                  .map((value) => DropdownMenuItem(
-                                        child: Text(
-                                          value,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                        value: value,
-                                      ))
-                                  .toList(),
-                            ));
+                        return Column(
+                          children: <Widget>[
+                            
+                            Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(14)),
+                                child: DropdownButton<String>(
+                                  style: GoogleFonts.sourceSansPro(
+                                      fontSize: 18,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400),
+                                  isExpanded: true,
+                                  value: myModel.location,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 42,
+                                  underline: SizedBox(),
+                                  onChanged: (newValue) {
+                                    print("new location set");
+                                    final model = Provider.of<InventoryModel>(
+                                        context,
+                                        listen: false);
+                                    model.filterLocation(newValue);
+                                  },
+                                  items: _dropVals
+                                      .map((value) => DropdownMenuItem(
+                                            child: Text(
+                                              value,
+                                              style: TextStyle(color: Colors.black),
+                                            ),
+                                            value: value,
+                                          ))
+                                      .toList(),
+                                )),
+                          ],
+                        );
                       })
                     ],
                   ),
