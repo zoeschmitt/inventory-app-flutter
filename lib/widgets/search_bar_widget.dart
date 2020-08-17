@@ -5,7 +5,6 @@ import 'package:inventory/models/inventory_model.dart';
 import 'package:provider/provider.dart';
 
 class SearchBarWidget extends StatefulWidget {
-
   @override
   _SearchBarWidgetState createState() => _SearchBarWidgetState();
 }
@@ -13,15 +12,15 @@ class SearchBarWidget extends StatefulWidget {
 class _SearchBarWidgetState extends State<SearchBarWidget> {
   TextEditingController _controller;
 
-void initState() {
-  super.initState();
-  _controller = TextEditingController();
-}
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
 
-void dispose() {
-  _controller.dispose();
-  super.dispose();
-}
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +57,8 @@ void dispose() {
                             color: Colors.black87,
                             fontWeight: FontWeight.w400),
                         textCapitalization: TextCapitalization.sentences,
-                        onChanged: (String value) { 
-                          model.searchService(value);
+                        onChanged: (String value) {
+                          model.searchProds(value);
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -73,6 +72,16 @@ void dispose() {
                         ),
                         //onChanged: (query) => updateSearchQuery,
                       ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        SFSymbols.xmark,
+                        color: Colors.black26,
+                        size: 22,
+                      ), onPressed: () { 
+                        _controller.text = "";
+                       //model.searchProds("  "); 
+                        },
                     ),
                   ],
                 ),

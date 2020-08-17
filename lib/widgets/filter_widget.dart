@@ -1,64 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/inventory_model.dart';
+import 'package:inventory/utils/styles.dart';
+import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/modal_title_widget.dart';
 import 'package:provider/provider.dart';
 
 class FilterWidget extends StatelessWidget {
-  final List<String> _dropVals = <String>[
-    "All",
-    'San Antonio, TX',
-    'Austin, TX',
-    'Dallas, TX',
-    'Houston, TX'
-  ];
-
-  final List<String> _categories = <String>[
-    "All",
-    'San Antonio, TX',
-    'Austin, TX',
-    'Dallas, TX',
-    'Houston, TX'
-  ];
-
-  final List<String> _location = <String>[
-    "All",
-    'San Antonio, TX',
-    'Austin, TX',
-    'Dallas, TX',
-    'Houston, TX'
-  ];
-
-  Widget returnDropDown(List<String> items, String value, Function onChanged) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        decoration: BoxDecoration(
-            color: Colors.grey[200], borderRadius: BorderRadius.circular(14)),
-        child: DropdownButton<String>(
-          style: GoogleFonts.sourceSansPro(
-              fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w400),
-          isExpanded: true,
-          value: value,
-          icon: Icon(Icons.arrow_drop_down),
-          iconSize: 42,
-          underline: SizedBox(),
-          onChanged: (newValue) { onChanged(); },
-          items: items
-              .map((value) => DropdownMenuItem(
-                    child: Text(
-                      value,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    value: value,
-                  ))
-              .toList(),
-        ));
-  }
-
-  void dropdownAction() {
-
-  }
+  const FilterWidget({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +30,7 @@ class FilterWidget extends StatelessWidget {
               color: Colors.black26,
             ),
             onPressed: () {
+              final model = Provider.of<InventoryModel>(context, listen: false);
               showModalBottomSheet(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -93,45 +47,149 @@ class FilterWidget extends StatelessWidget {
                     //crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      ModalTitleWidget(title: "Filter Items"),
+                      ModalTitleWidget(title: "Filters"),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: <Widget>[
+                      //     // Text(
+                          //   "Filters",
+                          //   maxLines: 2,
+                          //   style: GoogleFonts.libreFranklin(
+                          //       fontSize: 30,
+                          //       color: Colors.black87,
+                          //       fontWeight: FontWeight.w600),
+                          // ),
+                          // Row(
+                          //   children: <Widget>[
+                          //     GestureDetector(
+                          //       onTap: () {
+                          //         model.catSet = Category(name: "All", id: "0");
+                          //         model.locationSet =
+                          //             Locations(name: "All", id: "0");
+                          //         model.productService("20");
+                          //       },
+                          //       child: Container(
+                          //         decoration: BoxDecoration(
+                          //           borderRadius:
+                          //               BorderRadius.all(Radius.circular(15)),
+                          //           color: Styles.backgroundCol,
+                          //         ),
+                          //         child: Padding(
+                          //           padding: const EdgeInsets.all(12.0),
+                          //           child: Text(
+                          //             "Clear",
+                          //             style: GoogleFonts.sourceSansPro(
+                          //                 fontSize: 16,
+                          //                 color: Colors.black87,
+                          //                 fontWeight: FontWeight.normal),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                      //         SizedBox(width: 10),
+                      //         GestureDetector(
+                      //             onTap: () {
+                      //               Navigator.of(context).pop();
+                      //             },
+                      //             child: CustomButton(icon: Icons.clear)),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
                       SizedBox(height: 20.0),
                       Consumer<InventoryModel>(//                  <--- Consumer
                           builder: (context, myModel, _) {
                         return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            
+                            //category
+                            Text(
+                              "Category",
+                              style: GoogleFonts.sourceSansPro(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(height: 10),
                             Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 5),
                                 decoration: BoxDecoration(
                                     color: Colors.grey[200],
                                     borderRadius: BorderRadius.circular(14)),
-                                child: DropdownButton<String>(
+                                child: DropdownButton<Category>(
                                   style: GoogleFonts.sourceSansPro(
                                       fontSize: 18,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w400),
                                   isExpanded: true,
+                                  hint: Text("Category"),
+                                  value: myModel.category,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 42,
+                                  underline: SizedBox(),
+                                  onChanged: (newValue) {
+                                    print("new category set");
+                                    model.catSet = newValue;
+                                    model.productService("20");
+                                  },
+                                  items: myModel.categories == null
+                                      ? List<DropdownMenuItem<Category>>()
+                                      : myModel.categories
+                                          .map((value) => DropdownMenuItem(
+                                                child: Text(
+                                                  value.name,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                value: value,
+                                              ))
+                                          .toList(),
+                                )),
+                            SizedBox(height: 20),
+                            //location
+                            Text(
+                              "Location",
+                              style: GoogleFonts.sourceSansPro(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(14)),
+                                child: DropdownButton<Locations>(
+                                  style: GoogleFonts.sourceSansPro(
+                                      fontSize: 18,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400),
+                                  isExpanded: true,
+                                  hint: Text("Location"),
                                   value: myModel.location,
                                   icon: Icon(Icons.arrow_drop_down),
                                   iconSize: 42,
                                   underline: SizedBox(),
                                   onChanged: (newValue) {
                                     print("new location set");
-                                    final model = Provider.of<InventoryModel>(
-                                        context,
-                                        listen: false);
-                                    model.filterLocation(newValue);
+                                    model.locationSet = newValue;
+                                    model.productService("20");
                                   },
-                                  items: _dropVals
-                                      .map((value) => DropdownMenuItem(
-                                            child: Text(
-                                              value,
-                                              style: TextStyle(color: Colors.black),
-                                            ),
-                                            value: value,
-                                          ))
-                                      .toList(),
+                                  items: myModel.locationList == null
+                                      ? List<DropdownMenuItem<Locations>>()
+                                      : myModel.locationList
+                                          .map((value) => DropdownMenuItem(
+                                                child: Text(
+                                                  value.name,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                value: value,
+                                              ))
+                                          .toList(),
                                 )),
                           ],
                         );

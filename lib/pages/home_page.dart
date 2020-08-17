@@ -1,14 +1,7 @@
-import 'dart:ui';
-
-import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
-import 'package:inventory/main.dart';
 import 'package:inventory/models/inventory_model.dart';
-import 'package:inventory/pages/scanner_page.dart';
 import 'package:inventory/utils/styles.dart';
-import 'package:inventory/widgets/circle_widget.dart';
 import 'package:inventory/widgets/filter_widget.dart';
 import 'package:inventory/widgets/lists/items_list_widget.dart';
 import 'package:inventory/widgets/search_bar_widget.dart';
@@ -21,7 +14,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
+  ScrollController controller;
+
+  void _scrollListener() {
+    final model = Provider.of<InventoryModel>(context, listen: false);
+    
+    if (controller.position.pixels == controller.position.maxScrollExtent) {
+     
+      model.productService((model.products.length + 20).toString());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = new ScrollController()..addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(_scrollListener);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<InventoryModel>(context, listen: false);
@@ -48,8 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SafeArea(
         bottom: false,
         child: RefreshIndicator(
-          onRefresh: () async { model.productService(); },
-                  child: SingleChildScrollView(
+          onRefresh: () async {
+            model.productService("20");
+          },
+          child: SingleChildScrollView(
+            controller: controller,
             child: Padding(
               padding: const EdgeInsets.only(
                   left: 25.0, right: 25, top: 20, bottom: 45),
@@ -75,6 +93,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-  
-

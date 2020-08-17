@@ -31,173 +31,138 @@ class _SignUpPageState extends State<SignUpPage> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.white,
-            body: Stack(
-              overflow: Overflow.clip,
-              children: <Widget>[
-                CircleWidget(
-                  left: -120,
-                  top: -100,
-                  mult: 1.4,
-                ),
-                CircleWidget(
-                  right: -190,
-                  top: 185,
-                  mult: 1.4,
-                ),
-                CircleWidget(
-                  left: -100,
-                  bottom: -80,
-                  mult: 1.2,
-                ),
-                BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 65.0, sigmaY: 65.0),
-                  child: Container(
-                    color: Colors.white.withOpacity(0.75),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                  ),
-                ),
-                SafeArea(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 25.0, right: 25, top: 20, bottom: 50),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height / 5),
-                          Text(
-                            "Sign Up",
+            backgroundColor: Styles.backgroundCol,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 25.0, right: 25, top: 20, bottom: 50),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: MediaQuery.of(context).size.height / 5),
+                      Text(
+                        "Sign Up",
+                        style: GoogleFonts.sourceSansPro(
+                            fontSize: 35,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height / 6),
+                      Text(
+                        error,
+                        style: TextStyle(fontSize: 14.0, color: Colors.red),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(32),
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: const Offset(0.0, 0.0),
+                                  blurRadius: 18.0,
+                                  spreadRadius: 7.0,
+                                  color: Colors.black.withOpacity(0.03)),
+                            ]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                TextFormField(
+                                  //controller: widget.controller,
+                                  //enabled: widget.enabled,
+                                  style: Styles.authStyle,
+                                  textCapitalization: TextCapitalization.words,
+                                  autovalidate: false,
+                                  //inputFormatters: widget.inputFormatters,
+                                  minLines: 1,
+                                  decoration: Styles.returnDec("Full Name"),
+                                  onChanged: (val) {
+                                    setState(() => name = val);
+                                  },
+                                  validator: (val) =>
+                                      val.isEmpty ? 'Enter a valid name' : null,
+                                ),
+                                SizedBox(height: 15),
+                                TextFormField(
+                                  //controller: widget.controller,
+                                  //enabled: widget.enabled,
+                                  style: Styles.authStyle,
+                                  textCapitalization: TextCapitalization.none,
+                                  autovalidate: false,
+                                  onChanged: (val) {
+                                    setState(() => email = val);
+                                  },
+                                  //inputFormatters: widget.inputFormatters,
+                                  minLines: 1,
+                                  decoration: Styles.returnDec("Email"),
+                                  validator: (val) =>
+                                      val.isEmpty || !val.contains("@")
+                                          ? 'Enter a valid email'
+                                          : null,
+                                ),
+                                SizedBox(height: 15),
+                                TextFormField(
+                                  obscureText: true,
+                                  //controller: widget.controller,
+                                  //enabled: widget.enabled,
+                                  style: Styles.authStyle,
+                                  textCapitalization: TextCapitalization.none,
+                                  autovalidate: false,
+                                  onChanged: (val) {
+                                    setState(() => password = val);
+                                  },
+                                  //inputFormatters: widget.inputFormatters,
+                                  minLines: 1,
+                                  decoration: Styles.returnDec("Password"),
+                                  validator: (val) => val.length < 6
+                                      ? 'Your password must be at least 6 characters long'
+                                      : null,
+                                ),
+                                SizedBox(height: 15),
+                                MainButton(
+                                  title: "Sign Up",
+                                  onPressed: () async {
+                                    if (_formKey.currentState.validate()) {
+                                      setState(() => loading = true);
+                                      dynamic result = await _auth
+                                          .registerWithEmailAndPassword(
+                                              email, password, name);
+                                      if (result == null && mounted) {
+                                        setState(() {
+                                          loading = false;
+                                          error =
+                                              'Please supply valid credentials';
+                                        });
+                                      }
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: GestureDetector(
+                          onTap: () => widget.toggleView(),
+                          child: Text(
+                            "Sign In",
                             style: GoogleFonts.sourceSansPro(
-                                fontSize: 35,
+                                fontSize: 15,
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w600),
                           ),
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height / 6),
-                          Text(
-                            error,
-                            style: TextStyle(fontSize: 14.0, color: Colors.red),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(32),
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: const Offset(0.0, 0.0),
-                                      blurRadius: 18.0,
-                                      spreadRadius: 7.0,
-                                      color: Colors.black.withOpacity(0.03)),
-                                ]),
-                            child: Padding(
-                              padding: const EdgeInsets.all(25.0),
-                              child: Form(
-                                key: _formKey,
-                                child: Column(
-                                  children: <Widget>[
-                                    TextFormField(
-                                      //controller: widget.controller,
-                                      //enabled: widget.enabled,
-                                      style: Styles.authStyle,
-                                      textCapitalization:
-                                          TextCapitalization.words,
-                                      autovalidate: false,
-                                      //inputFormatters: widget.inputFormatters,
-                                      minLines: 1,
-                                      decoration: Styles.returnDec("Full Name"),
-                                      onChanged: (val) {
-                                        setState(() => name = val);
-                                      },
-                                      validator: (val) => val.isEmpty
-                                          ? 'Enter a valid name'
-                                          : null,
-                                    ),
-                                    SizedBox(height: 15),
-                                    TextFormField(
-                                      //controller: widget.controller,
-                                      //enabled: widget.enabled,
-                                      style: Styles.authStyle,
-                                      textCapitalization:
-                                          TextCapitalization.none,
-                                      autovalidate: false,
-                                      onChanged: (val) {
-                                        setState(() => email = val);
-                                      },
-                                      //inputFormatters: widget.inputFormatters,
-                                      minLines: 1,
-                                      decoration: Styles.returnDec("Email"),
-                                      validator: (val) =>
-                                          val.isEmpty || !val.contains("@")
-                                              ? 'Enter a valid email'
-                                              : null,
-                                    ),
-                                    SizedBox(height: 15),
-                                    TextFormField(
-                                      obscureText: true,
-                                      //controller: widget.controller,
-                                      //enabled: widget.enabled,
-                                      style: Styles.authStyle,
-                                      textCapitalization:
-                                          TextCapitalization.none,
-                                      autovalidate: false,
-                                      onChanged: (val) {
-                                        setState(() => password = val);
-                                      },
-                                      //inputFormatters: widget.inputFormatters,
-                                      minLines: 1,
-                                      decoration: Styles.returnDec("Password"),
-                                      validator: (val) => val.length < 6
-                                          ? 'Your password must be at least 6 characters long'
-                                          : null,
-                                    ),
-                                    SizedBox(height: 15),
-                                    MainButton(
-                                      title: "Sign Up",
-                                      onPressed: () async {
-                                        if (_formKey.currentState.validate()) {
-                                          setState(() => loading = true);
-                                          dynamic result = await _auth
-                                              .registerWithEmailAndPassword(
-                                                  email, password, name);
-                                          if (result == null && mounted) {
-                                            setState(() {
-                                              loading = false;
-                                              error =
-                                                  'Please supply valid credentials';
-                                            });
-                                          }
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 15.0),
-                            child: GestureDetector(
-                              onTap: () => widget.toggleView(),
-                              child: Text(
-                                "Sign In",
-                                style: GoogleFonts.sourceSansPro(
-                                    fontSize: 15,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           );
   }

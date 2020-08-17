@@ -56,19 +56,19 @@ class ItemContainerWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5),
-                    SmallContainer(text: amount),
+                    SmallContainer(text: amount, color: Colors.white,),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    const Icon(
-                      SFSymbols.barcode,
-                      color: Colors.black54,
-                      size: 20,
-                    ),
-                    SizedBox(width: 7),
+                    // const Icon(
+                    //   SFSymbols.barcode,
+                    //   color: Colors.black54,
+                    //   size: 20,
+                    // ),
+                    //SizedBox(width: 7),
                     Text(
                       sku,
                       style: GoogleFonts.sourceSansPro(

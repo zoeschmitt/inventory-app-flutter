@@ -15,6 +15,7 @@ class CustomFieldWidget extends StatefulWidget {
   final List<TextInputFormatter> inputFormatters;
   final double maxLines;
   final TextCapitalization textCap;
+  final TextInputType keyboardType;
 
   CustomFieldWidget({
     Key key,
@@ -24,7 +25,7 @@ class CustomFieldWidget extends StatefulWidget {
     this.initialText,
     this.valFunc,
     this.inputFormatters,
-    this.maxLines = 1, this.textCap, this.onChanged,
+    this.maxLines = 1, this.textCap, this.onChanged, this.keyboardType,
   }) : super(key: key);
   @override
   _CustomFieldWidgetState createState() => _CustomFieldWidgetState();
@@ -49,6 +50,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           height: 8,
         ),
         TextFormField(
+          keyboardType: widget.keyboardType == null ? null : widget.keyboardType,
           initialValue: widget.initialText,
           controller: widget.controller,
           enabled: widget.enabled,

@@ -1,15 +1,3 @@
-class AllProducts {
-  List<Item> items;
-
-  AllProducts({this.items});
-
-  factory AllProducts.fromJson(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['data'] as List;
-    List<Item> items = list.map((i) => Item.fromJson(i)).toList();
-    return AllProducts(items: items);
-  }
-}
-
 class Item {
   String type;
   String id;
@@ -29,14 +17,16 @@ class Item {
 }
 
 class ItemData {
-  final String name;
-  final List<ItemVariation> variations;
+  String name;
+  String categoryId;
+  List<ItemVariation> variations;
 
-  ItemData({this.name, this.variations});
+  ItemData({this.name, this.categoryId, this.variations});
 
   factory ItemData.fromJson(Map<String, dynamic> parsedJson) {
     return ItemData(
         name: parsedJson['name'],
+        categoryId: parsedJson['category_id'],
         variations: parsedJson['variations'] != null
             ? List<ItemVariation>.from(
                 parsedJson["variations"].map((x) => ItemVariation.fromJson(x)))
@@ -47,15 +37,24 @@ class ItemData {
 class ItemVariation {
   String type;
   String id;
+  List<String> locationsPresent;
   String imageId;
   ItemVariationData data;
 
-  ItemVariation({this.type, this.id, this.imageId, this.data});
+  ItemVariation(
+      {this.type, this.locationsPresent, this.id, this.imageId, this.data});
 
   factory ItemVariation.fromJson(Map<String, dynamic> parsedJson) {
+    List<String> locList = [];
+    if (parsedJson['present_at_location_ids'] != null) {
+      var locationsList = parsedJson['present_at_location_ids'];
+      locList = locationsList.cast<String>();
+    }
+
     return ItemVariation(
       type: parsedJson['type'],
       id: parsedJson['id'],
+      locationsPresent: locList,
       imageId: parsedJson['image_id'],
       data: ItemVariationData.fromJson(parsedJson['item_variation_data']),
     );
@@ -63,19 +62,25 @@ class ItemVariation {
 }
 
 class ItemVariationData {
+  final String itemId;
   final String name;
+  final String sku;
+  final Price price;
 
-  ItemVariationData({this.name});
+  ItemVariationData({this.itemId, this.sku, this.price, this.name});
 
   factory ItemVariationData.fromJson(Map<String, dynamic> parsedJson) {
     return ItemVariationData(
+      itemId: parsedJson['item_id'],
       name: parsedJson['name'],
+      sku: parsedJson['sku'],
+      price: Price.fromJson(parsedJson['price_money']),
     );
   }
 }
 
 class Price {
-  final String amount;
+  final int amount;
   final String currency;
 
   Price({this.currency, this.amount});
