@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/item.dart';
+import 'package:inventory/services/image_service.dart';
 import 'package:inventory/services/product_service.dart';
 
 class InventoryModel with ChangeNotifier {
   Locations _location = Locations(name: "All", id: "0");
+  Locations _newlocation = Locations(name: "All", id: "0");
   Category _category = Category(name: "All", id: "0");
   List<Category> _cats;
   List<Locations> _locations;
+  List<Locations> _newlocations;
   List<Item> _products;
   ProductService _service = ProductService();
+  ImageService _imageService = ImageService();
   String _search = "  ";
   List<ItemLocationCount> _currentItemLocs = [];
+  bool _isLoading = false;
 
   List<ItemLocationCount> get currentLocs => _currentItemLocs;
   List<Item> get products => _products;
   List<Category> get categories => _cats;
   List<Locations> get locationList => _locations;
+  List<Locations> get newlocationList => _newlocations;
   Locations get location => _location;
+  Locations get newLocation => _newlocation;
   Category get category => _category;
   String get search => _search;
+  bool get loading => _isLoading;
 
   set locationSet(Locations loc) => _location = loc;
+  set newLocationSet(Locations loc) {
+    _newlocation = loc;
+    notifyListeners();
+  }
+
   set catSet(Category cat) => _category = cat;
   set currentLocationsSet(List<ItemLocationCount> locs) =>
       _currentItemLocs = locs;
@@ -31,7 +44,6 @@ class InventoryModel with ChangeNotifier {
     getCats();
     getLocations();
   }
-
 
   void searchProds(String prod) {
     print(prod);
@@ -121,6 +133,8 @@ class InventoryModel with ChangeNotifier {
       if (value.isNotEmpty) {
         _location = value[0];
         _locations = value;
+        _newlocation = value[0];
+        _newlocations = value;
       }
 
       notifyListeners();
@@ -146,6 +160,7 @@ class InventoryModel with ChangeNotifier {
 
   void getItemLocations(String id) {
     print("location count service");
+    _isLoading = true;
     _service.getLocationQuantities(id).then((value) {
       if (value.isNotEmpty) {
         _currentItemLocs = value;
@@ -159,16 +174,55 @@ class InventoryModel with ChangeNotifier {
           });
         }
       }
+      _isLoading = false;
       notifyListeners();
     }, onError: (error) {
       print(error);
     });
   }
 
-  Future<bool> changeInv(Item item) async {
-    //await new list
-    notifyListeners();
-    return false;
+  Future<bool> changeInv(String catId, String quantity, String locId, bool add) async {
+    bool result = false;
+    print("change inv service");
+    _isLoading = true;
+    _service.updateInventory(catId, quantity, locId, add).then((value) {
+      result = true;
+      _isLoading = false;
+      notifyListeners();
+    }, onError: (error) {
+      print(error);
+    });
+
+    return result;
   }
 
+  Future<String> getCOA(String id) async {
+    String coaUrl = "";
+    _service.getCOAId(id).then((value) {
+      if (value != null) {
+        coaUrl = value;
+        print("in model coa: " + coaUrl);
+      }
+      //notifyListeners();
+    }, onError: (error) {
+      print(error);
+    });
+    return coaUrl;
+  }
+
+  Future<List<String>> getImageIds(String id) async {
+    List<String> ids = [];
+    _imageService.getImageIds(id).then((value) {
+      if (value != null) {
+        ids = value;
+        if (ids.isNotEmpty) {
+          print("in model img: " + ids[0]);
+        }
+      }
+      //notifyListeners();
+    }, onError: (error) {
+      print(error);
+    });
+    return ids;
+  }
 }

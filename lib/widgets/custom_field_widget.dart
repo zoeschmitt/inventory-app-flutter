@@ -50,7 +50,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           height: 8,
         ),
         TextFormField(
-          keyboardType: widget.keyboardType == null ? null : widget.keyboardType,
+          keyboardType: widget.keyboardType,
           initialValue: widget.initialText,
           controller: widget.controller,
           enabled: widget.enabled,

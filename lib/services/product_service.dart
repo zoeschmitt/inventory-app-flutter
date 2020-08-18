@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/item.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProductService {
   static const PROD_POST_URL =
@@ -12,7 +13,11 @@ class ProductService {
       "https://alamoapp.azurewebsites.net/api/GetAllCategory";
   static const ADD_INV_URL =
       "https://alamoapp.azurewebsites.net/api/AddInventory";
-  static const GET_INV_URL = "alamoapp-devalamoapp.azurewebsites.net";
+  static const BASE_URL = "alamoapp-devalamoapp.azurewebsites.net";
+  static const COA_PDF_URL =
+      "https://marketingstoreimages.blob.core.windows.net/labreports/";
+  static const UPDATE_URL =
+      'https://alamoapp.azurewebsites.net/api/AddUpdateItem';
 
   Future<List<Item>> fetchProducts(String limit, String searchProd) async {
     List<Item> prods = [];
@@ -78,9 +83,9 @@ class ProductService {
 
   Future<List<ItemLocationCount>> getLocationQuantities(String id) async {
     List<ItemLocationCount> locQ = [];
-  print(id);
+    print(id);
     final uri = new Uri.https(
-        GET_INV_URL, '/api/GetInventoryCount', {"catalog_object_ids": id});
+        BASE_URL, '/api/GetInventoryCount', {"catalog_object_ids": id});
     Response response = await get(uri);
 
     if (response.statusCode == 200) {
@@ -89,8 +94,8 @@ class ProductService {
         locQ = loc.map((i) => ItemLocationCount.fromJson(i)).toList();
       }
       if (locQ.isNotEmpty) {
-      print(locQ.length);
-    }
+        print(locQ.length);
+      }
       print("locQ done");
     } else {
       print('Response locq status: ${response.statusCode}');
@@ -98,4 +103,101 @@ class ProductService {
 
     return locQ;
   }
+
+  Future<String> getCOAId(String id) async {
+    String coaId = "";
+    print("coaId" + id);
+
+    final uri = new Uri.https(BASE_URL, '/api/GetCOA', {"id": id});
+
+    Response response = await get(uri);
+
+    if (response.statusCode == 200) {
+      print("coa response code" + response.statusCode.toString());
+      if (jsonDecode(response.body) != null) {
+        var coa = jsonDecode(response.body) as List;
+        print("coa as list" + coa.toString());
+        //cats = cat.map<Category>((m) => m['name'] as Category).toList();
+        coaId = coa.map<String>((e) => e['COAID']).toString();
+        print("coa as map" + coaId);
+      }
+      if (coaId.isNotEmpty) {
+        print(coaId.substring(1, coaId.length - 1));
+      }
+      print("coaId done");
+    } else {
+      print('Response coaId status: ${response.statusCode}');
+    }
+
+    return coaId.substring(1, coaId.length - 1);
+  }
+
+  Future<bool> updateInventory(
+      String catId, String quantity, String locId, bool add) async {
+    bool result = false;
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "*/*",
+    };
+    final body1 = jsonEncode({
+      "catalog_object_id": catId,
+      "from_state": add ? "NONE" : "IN_STOCK",
+      "quantity": quantity,
+      "to_state": add ? "IN_STOCK" : "SOLD",
+      "location_id": locId,
+      "occurred_at": DateTime.now().toUtc().toIso8601String()
+    });
+    Response response =
+        await post(ADD_INV_URL, headers: headers, body: body1); //int
+    print(catId);
+    print(quantity);
+    print(locId);
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+      print(response.body);
+      result = true;
+    } else {
+      print('Response status: ${response.statusCode}');
+    }
+
+    return result;
+  }
+
+  Future<bool> updateProduct(Item item) async {
+    bool status = false;
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "*/*",
+    };
+    final body1 = jsonEncode(item);
+    Response response =
+        await post(UPDATE_URL, headers: headers, body: body1); //int
+    //print('Response body: ${response.body}'); // json
+    if (response.statusCode == 200) {
+      print("prodyct updated");
+      status = true;
+    } else {
+      print('Response status: ${response.statusCode}');
+    }
+
+    return status;
+  }
+
+  //   static Future<String> loadPDF(String itemId) async {
+  //     String coaId = "";
+  //     var response1 = await get(COA_URL + itemId);
+
+  //   var dir = await getApplicationDocumentsDirectory();
+  //   File file = new File("${dir.path}/data.pdf");
+  //   file.writeAsBytesSync(response1.bodyBytes, flush: true);
+  //   return file.path;
+
+  //   var response2 = await get(BASE_URL);
+
+  //   var dir = await getApplicationDocumentsDirectory();
+  //   File file = new File("${dir.path}/data.pdf");
+  //   file.writeAsBytesSync(response2.bodyBytes, flush: true);
+  //   return file.path;
+  // }
+
 }

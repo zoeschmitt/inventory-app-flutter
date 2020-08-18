@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/widgets/small_container.dart';
 
@@ -8,12 +7,14 @@ class ItemContainerWidget extends StatelessWidget {
   final String name;
   final String sku;
   final String amount;
+  final String imageId;
+  static const IMG_BASE_URL = 'https://marketingstoreimages.blob.core.windows.net/productimages/';
 
   const ItemContainerWidget({
     Key key,
     this.name,
     this.sku,
-    this.amount,
+    this.amount, this.imageId, 
   }) : super(key: key);
 
   @override
@@ -23,14 +24,15 @@ class ItemContainerWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          // possible backlogged, item image
           Container(
-            //put item image here
+            child: imageId != null || imageId.isNotEmpty ? (Image.network(IMG_BASE_URL + imageId)) : Container(),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               color: Colors.grey[300],
             ),
-            height: MediaQuery.of(context).size.width / 4.8,
-            width: MediaQuery.of(context).size.width / 4.8,
+            height: MediaQuery.of(context).size.width / 5,
+            width: MediaQuery.of(context).size.width / 5,
           ),
           SizedBox(width: 13.0),
           Flexible(
@@ -55,28 +57,28 @@ class ItemContainerWidget extends StatelessWidget {
                         textAlign: TextAlign.start,
                       ),
                     ),
-                    SizedBox(width: 5),
-                    SmallContainer(text: amount, color: Colors.white,),
+                    SizedBox(width: 10),
+                    SmallContainer(
+                      text: amount,
+                      color: Colors.white,
+                    ),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    // const Icon(
-                    //   SFSymbols.barcode,
-                    //   color: Colors.black54,
-                    //   size: 20,
-                    // ),
-                    //SizedBox(width: 7),
-                    Text(
-                      sku,
-                      style: GoogleFonts.sourceSansPro(
-                          fontSize: 18,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w400),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
+                    Flexible(
+                      fit: FlexFit.tight,
+                      child: Text(
+                        sku,
+                        style: GoogleFonts.sourceSansPro(
+                            fontSize: 18,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                      ),
                     ),
                   ],
                 ),

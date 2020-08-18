@@ -80,7 +80,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                         size: 22,
                       ), onPressed: () { 
                         _controller.text = "";
-                       //model.searchProds("  "); 
+                       model.searchProds("  "); 
                         },
                     ),
                   ],

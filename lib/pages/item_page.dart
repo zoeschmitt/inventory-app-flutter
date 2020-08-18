@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/inventory_model.dart';
 import 'package:inventory/models/item.dart';
+import 'package:inventory/pages/modals/add_location_modal.dart';
 import 'package:inventory/pages/modals/location_modal.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/image_carousel_widget.dart';
@@ -11,6 +12,8 @@ import 'package:inventory/widgets/location_container_widget.dart';
 import 'package:inventory/widgets/small_container.dart';
 import 'package:inventory/widgets/view_coa_report_widget.dart';
 import 'package:provider/provider.dart';
+
+import 'modals/coa_modal.dart';
 
 class ItemPage extends StatefulWidget {
   final Item item;
@@ -23,18 +26,25 @@ class ItemPage extends StatefulWidget {
 
 class _ItemPageState extends State<ItemPage> {
   String price = "";
+  List<String> images = [];
 
-    @override
+  @override
   void initState() {
     super.initState();
-    final model1 = Provider.of<InventoryModel>(context, listen: false);
-    model1.getItemLocations(widget.item.data.variations[widget.variation].id);
+    //final model1 = Provider.of<InventoryModel>(context, listen: false);
+    //model1.getItemLocations(widget.item.data.variations[widget.variation].id);
+    loadImages();
   }
 
-    @override
+  @override
   void dispose() {
-
     super.dispose();
+  }
+
+  void loadImages() async {
+    final model1 = Provider.of<InventoryModel>(context, listen: false);
+    model1.getItemLocations(widget.item.data.variations[widget.variation].id);
+    images = await model1.getImageIds(widget.item.id);
   }
 
   @override
@@ -179,10 +189,14 @@ class _ItemPageState extends State<ItemPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () {
-                          //view COA report
-                        },
-                        child: ViewCOAReportWidget()),
+                          onTap: () async {
+                            print("tapped coa");
+                            String coa = await model.getCOA(widget.item.data
+                                .variations[widget.variation].data.itemId);
+                            print("in coa tapped: " + coa);
+                            _coaModal(context, coa);
+                          },
+                          child: ViewCOAReportWidget()),
                       SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -196,21 +210,31 @@ class _ItemPageState extends State<ItemPage> {
                                 fontWeight: FontWeight.w600),
                           ),
                           GestureDetector(
-                            onTap: () {
-                              //add location + amount of inv
-                            },
-                            child: SmallContainer(text: "Add Location", color: Colors.grey[200],))
+                              onTap: () {
+                                _addLocationModal(
+                                    context,
+                                    widget.item.data
+                                        .variations[widget.variation]);
+                              },
+                              child: SmallContainer(
+                                text: "Add Location",
+                                color: Colors.grey[200],
+                              ))
                         ],
                       ),
                       SizedBox(height: 15),
-                      model.currentLocs == null
-                          ? CircularProgressIndicator()
+                      model.currentLocs == null || model.loading == true
+                          ? Center(child: CircularProgressIndicator())
                           : ListView.separated(
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index1) {
                                 return GestureDetector(
                                   onTap: () {
-                                    _locationModal(context, model.currentLocs[index1], );
+                                    _locationModal(
+                                        context,
+                                        model.currentLocs[index1],
+                                        widget.item.data
+                                            .variations[widget.variation]);
                                     //modal w location name and id, xbutton, field where you add new amount and save button.
                                   },
                                   child: AbsorbPointer(
@@ -241,19 +265,54 @@ class _ItemPageState extends State<ItemPage> {
   }
 }
 
-  _locationModal(BuildContext context, ItemLocationCount location) {
-    showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
+void _locationModal(
+    BuildContext context, ItemLocationCount location, ItemVariation item) {
+  showModalBottomSheet(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(16.0),
+        topRight: Radius.circular(16.0),
       ),
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.5,
-        child: LocationModal(location: location,),
+    ),
+    context: context,
+    isScrollControlled: true,
+    builder: (context) => Container(
+      //height: MediaQuery.of(context).size.height * 0.5,
+      child: LocationModal(location: location, item: item),
+    ),
+  );
+}
+
+void _addLocationModal(BuildContext context, ItemVariation item) {
+  showModalBottomSheet(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(16.0),
+        topRight: Radius.circular(16.0),
       ),
-    );
-  }
+    ),
+    context: context,
+    isScrollControlled: true,
+    builder: (context) => Container(
+      //height: MediaQuery.of(context).size.height * 0.5,
+      child: AddLocationModal(item: item),
+    ),
+  );
+}
+
+void _coaModal(BuildContext context, String id) {
+  showModalBottomSheet(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(16.0),
+        topRight: Radius.circular(16.0),
+      ),
+    ),
+    context: context,
+    isScrollControlled: true,
+    builder: (context) => Container(
+      height: MediaQuery.of(context).size.height * 0.9,
+      child: COAModal(id: id),
+    ),
+  );
+}

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:inventory/utils/styles.dart';
 
 class ImageCarouselWidget extends StatefulWidget {
+  final List<String> images;
+
+  const ImageCarouselWidget({Key key, this.images}) : super(key: key);
   @override
   _ImageCarouselWidgetState createState() => _ImageCarouselWidgetState();
 }
