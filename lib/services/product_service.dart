@@ -170,9 +170,10 @@ class ProductService {
       "Accept": "*/*",
     };
     final body1 = jsonEncode(item);
+    print(body1);
     Response response =
         await post(UPDATE_URL, headers: headers, body: body1); //int
-    //print('Response body: ${response.body}'); // json
+    print('Response body: ${response.body}'); // json
     if (response.statusCode == 200) {
       print("prodyct updated");
       status = true;

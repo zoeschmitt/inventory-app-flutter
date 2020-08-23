@@ -14,6 +14,13 @@ class Item {
       data: ItemData.fromJson(parsedJson['item_data']),
     );
   }
+
+  Map<String, dynamic> toJson() =>
+  {
+    'id': id,
+    'image_id': imageId,
+    'item_data': data,
+  }; 
 }
 
 class ItemData {
@@ -32,6 +39,13 @@ class ItemData {
                 parsedJson["variations"].map((x) => ItemVariation.fromJson(x)))
             : List<ItemVariation>());
   }
+
+  Map<String, dynamic> toJson() =>
+  {
+    'name': name,
+    'category_id': categoryId,
+    'variations': variations,
+  }; 
 }
 
 class ItemVariation {
@@ -46,6 +60,7 @@ class ItemVariation {
 
   factory ItemVariation.fromJson(Map<String, dynamic> parsedJson) {
     List<String> locList = [];
+
     if (parsedJson['present_at_location_ids'] != null) {
       var locationsList = parsedJson['present_at_location_ids'];
       locList = locationsList.cast<String>();
@@ -59,29 +74,50 @@ class ItemVariation {
       data: ItemVariationData.fromJson(parsedJson['item_variation_data']),
     );
   }
+
+  Map<String, dynamic> toJson() =>
+  {
+    //'type': type,
+    'id': id,
+    'image_id': imageId,
+    'name': data.name,
+    'pricing_type': data.priceType,
+    'price': data.price
+  }; 
 }
 
 class ItemVariationData {
-  final String itemId;
-  final String name;
-  final String sku;
-  final Price price;
+  String itemId;
+  String name;
+  String sku;
+  String priceType;
+  Price price;
 
-  ItemVariationData({this.itemId, this.sku, this.price, this.name});
+  ItemVariationData({this.itemId, this.sku, this.priceType, this.price, this.name});
 
   factory ItemVariationData.fromJson(Map<String, dynamic> parsedJson) {
     return ItemVariationData(
       itemId: parsedJson['item_id'],
       name: parsedJson['name'],
       sku: parsedJson['sku'],
+      priceType: parsedJson['pricing_type'],
       price: Price.fromJson(parsedJson['price_money']),
     );
   }
+
+  Map<String, dynamic> toJson() =>
+  {
+    'item_id': itemId,
+    'name': name,
+    'sku': sku,
+    'pricing_type': priceType,
+    'price_money': price,
+  }; 
 }
 
 class Price {
-  final int amount;
-  final String currency;
+  int amount;
+  String currency;
 
   Price({this.currency, this.amount});
 
@@ -91,4 +127,9 @@ class Price {
       currency: parsedJson['currency'],
     );
   }
+    Map<String, dynamic> toJson() =>
+  {
+    'amount': amount,
+    'currency': currency,
+  }; 
 }

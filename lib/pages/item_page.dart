@@ -6,6 +6,7 @@ import 'package:inventory/models/inventory_model.dart';
 import 'package:inventory/models/item.dart';
 import 'package:inventory/pages/modals/add_location_modal.dart';
 import 'package:inventory/pages/modals/location_modal.dart';
+import 'package:inventory/pages/modals/new_item_modal.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/image_carousel_widget.dart';
 import 'package:inventory/widgets/location_container_widget.dart';
@@ -31,8 +32,6 @@ class _ItemPageState extends State<ItemPage> {
   @override
   void initState() {
     super.initState();
-    //final model1 = Provider.of<InventoryModel>(context, listen: false);
-    //model1.getItemLocations(widget.item.data.variations[widget.variation].id);
     loadImages();
   }
 
@@ -76,7 +75,8 @@ class _ItemPageState extends State<ItemPage> {
                       ),
                       GestureDetector(
                           onTap: () {
-                            //Navigator.of(context).pop();
+                            _editItemModal(
+                                context, widget.item, widget.variation, images);
                           },
                           child: CustomButton(icon: Icons.mode_edit)),
                     ],
@@ -180,7 +180,9 @@ class _ItemPageState extends State<ItemPage> {
                   ),
                 ),
                 SizedBox(height: 25),
-                ImageCarouselWidget(),
+                ImageCarouselWidget(
+                  images: images,
+                ),
                 SizedBox(height: 25),
                 Padding(
                   padding:
@@ -313,6 +315,28 @@ void _coaModal(BuildContext context, String id) {
     builder: (context) => Container(
       height: MediaQuery.of(context).size.height * 0.9,
       child: COAModal(id: id),
+    ),
+  );
+}
+
+void _editItemModal(
+    BuildContext context, Item item, int variation, List<String> imageIds) {
+  final photosMultiplier = 0.1;
+  showModalBottomSheet(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(16.0),
+        topRight: Radius.circular(16.0),
+      ),
+    ),
+    context: context,
+    isScrollControlled: true,
+    builder: (context) => SingleChildScrollView(
+      child: NewItemModal(
+          photosMultiplier: photosMultiplier,
+          currentPhotos: imageIds,
+          item: item,
+          variation: variation),
     ),
   );
 }

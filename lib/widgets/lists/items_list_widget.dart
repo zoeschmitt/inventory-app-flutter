@@ -71,10 +71,10 @@ class ItemsListWidget extends StatelessWidget {
                                               .products[index]
                                               .data
                                               .variations[index1]
-                                              .imageId
-                                              .isNotEmpty
+                                              .imageId == ""
+                                              
                                       ? model.products[index].data
-                                          .variations[index1].imageId.isNotEmpty
+                                          .variations[index1].imageId
                                       : "",
                                 ),
                               ),
@@ -84,27 +84,14 @@ class ItemsListWidget extends StatelessWidget {
                               model.products[index].data.variations.length,
                           shrinkWrap: true,
                           separatorBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Divider(
-                                height: 2,
-                                color: Colors.black12,
-                              ),
-                            );
+                            return SizedBox(height: 15);
                           },
                         );
                 },
                 itemCount: model.products.isEmpty ? 1 : model.products.length,
                 shrinkWrap: true,
                 separatorBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Divider(
-                      height: 2,
-                      color: Colors.black12,
-                    ),
-                  );
+                  return SizedBox(height: 15);
                 },
               ));
   }

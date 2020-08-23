@@ -186,7 +186,7 @@ class InventoryModel with ChangeNotifier {
     print("change inv service");
     _isLoading = true;
     _service.updateInventory(catId, quantity, locId, add).then((value) {
-      result = true;
+      result = value;
       _isLoading = false;
       notifyListeners();
     }, onError: (error) {
@@ -224,5 +224,20 @@ class InventoryModel with ChangeNotifier {
       print(error);
     });
     return ids;
+  }
+
+  Future<bool> updateProd(Item item) async {
+    bool result = false;
+    print("change inv service");
+    _isLoading = true;
+    _service.updateProduct(item).then((value) {
+      result = value;
+      _isLoading = false;
+      notifyListeners();
+    }, onError: (error) {
+      print(error);
+    });
+
+    return result;
   }
 }

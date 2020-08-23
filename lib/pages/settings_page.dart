@@ -66,13 +66,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: 'Export',
                       icon: SFSymbols.square_arrow_up_fill,
                     )),
-                SizedBox(height: 20),
-                GestureDetector(
-                    onTap: () {},
-                    child: SettingsOption(
-                      title: 'Share',
-                      icon: Icons.share,
-                    )),
+                // SizedBox(height: 20),
+                // GestureDetector(
+                //     onTap: () {},
+                //     child: SettingsOption(
+                //       title: 'Share',
+                //       icon: Icons.share,
+                //     )),
                 SizedBox(height: 20),
                 GestureDetector(
                     onTap: () {

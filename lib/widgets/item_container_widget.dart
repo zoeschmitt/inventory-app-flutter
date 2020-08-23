@@ -26,7 +26,7 @@ class ItemContainerWidget extends StatelessWidget {
         children: <Widget>[
           // possible backlogged, item image
           Container(
-            child: imageId != null || imageId.isNotEmpty ? (Image.network(IMG_BASE_URL + imageId)) : Container(),
+            child: (imageId != null && imageId.isNotEmpty) ? (Image.network(IMG_BASE_URL + imageId)) : Container(),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               color: Colors.grey[300],
