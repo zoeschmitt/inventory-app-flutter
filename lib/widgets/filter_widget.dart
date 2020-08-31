@@ -3,8 +3,6 @@ import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/inventory_model.dart';
-import 'package:inventory/utils/styles.dart';
-import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/modal_title_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -48,54 +46,6 @@ class FilterWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ModalTitleWidget(title: "Filters"),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: <Widget>[
-                      //     // Text(
-                          //   "Filters",
-                          //   maxLines: 2,
-                          //   style: GoogleFonts.libreFranklin(
-                          //       fontSize: 30,
-                          //       color: Colors.black87,
-                          //       fontWeight: FontWeight.w600),
-                          // ),
-                          // Row(
-                          //   children: <Widget>[
-                          //     GestureDetector(
-                          //       onTap: () {
-                          //         model.catSet = Category(name: "All", id: "0");
-                          //         model.locationSet =
-                          //             Locations(name: "All", id: "0");
-                          //         model.productService("20");
-                          //       },
-                          //       child: Container(
-                          //         decoration: BoxDecoration(
-                          //           borderRadius:
-                          //               BorderRadius.all(Radius.circular(15)),
-                          //           color: Styles.backgroundCol,
-                          //         ),
-                          //         child: Padding(
-                          //           padding: const EdgeInsets.all(12.0),
-                          //           child: Text(
-                          //             "Clear",
-                          //             style: GoogleFonts.sourceSansPro(
-                          //                 fontSize: 16,
-                          //                 color: Colors.black87,
-                          //                 fontWeight: FontWeight.normal),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ),
-                      //         SizedBox(width: 10),
-                      //         GestureDetector(
-                      //             onTap: () {
-                      //               Navigator.of(context).pop();
-                      //             },
-                      //             child: CustomButton(icon: Icons.clear)),
-                      //       ],
-                      //     ),
-                      //   ],
-                      // ),
                       SizedBox(height: 20.0),
                       Consumer<InventoryModel>(//                  <--- Consumer
                           builder: (context, myModel, _) {
@@ -131,14 +81,14 @@ class FilterWidget extends StatelessWidget {
                                   onChanged: (newValue) {
                                     print("new category set");
                                     model.catSet = newValue;
-                                    model.productService("20");
+                                    model.productService(null);
                                   },
                                   items: myModel.categories == null
                                       ? List<DropdownMenuItem<Category>>()
                                       : myModel.categories
                                           .map((value) => DropdownMenuItem(
                                                 child: Text(
-                                                  value.name,
+                                                  value.name != null ? value.name : " ",
                                                   style: TextStyle(
                                                       color: Colors.black),
                                                 ),
@@ -176,7 +126,7 @@ class FilterWidget extends StatelessWidget {
                                   onChanged: (newValue) {
                                     print("new location set");
                                     model.locationSet = newValue;
-                                    model.productService("20");
+                                    model.productService(null);
                                   },
                                   items: myModel.locationList == null
                                       ? List<DropdownMenuItem<Locations>>()

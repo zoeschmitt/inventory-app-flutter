@@ -6,15 +6,14 @@ import 'package:inventory/utils/styles.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/buttons/main_button.dart';
 import 'package:inventory/widgets/custom_field_widget.dart';
-import 'package:inventory/widgets/modal_title_widget.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 
-class NewItemModal extends StatefulWidget {
+class EditItemModal extends StatefulWidget {
   final Item item;
   final int variation;
   final List<String> currentPhotos;
-  const NewItemModal({
+  const EditItemModal({
     Key key,
     @required this.photosMultiplier,
     this.currentPhotos,
@@ -25,10 +24,10 @@ class NewItemModal extends StatefulWidget {
   final double photosMultiplier;
 
   @override
-  _NewItemModalState createState() => _NewItemModalState();
+  _EditItemModalState createState() => _EditItemModalState();
 }
 
-class _NewItemModalState extends State<NewItemModal> {
+class _EditItemModalState extends State<EditItemModal> {
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   bool loading = false;
@@ -73,6 +72,8 @@ class _NewItemModalState extends State<NewItemModal> {
       images = resultList;
       _error = error;
     });
+
+    images.forEach((element) {print(element.identifier);});
   }
 
   Widget getImageContainer(int index) {
@@ -132,6 +133,13 @@ class _NewItemModalState extends State<NewItemModal> {
 
   @override
   Widget build(BuildContext context) {
+    price = widget.item.data.variations[widget.variation].data.price != null
+        ? widget.item.data.variations[widget.variation].data.price.amount
+            .toString()
+        : " ";
+    name = (widget.item.data.variations.length < 2
+        ? widget.item.data.name
+        : widget.item.data.variations[widget.variation].data.name);
     return Container(
       //height: MediaQuery.of(context).size.height * 0.93,
       child: Column(
@@ -145,7 +153,11 @@ class _NewItemModalState extends State<NewItemModal> {
                 Flexible(
                   fit: FlexFit.tight,
                   child: Text(
-                    widget.item.data.variations[widget.variation].data.name,
+                    //widget.item.data.variations[widget.variation].data.name,
+                    (widget.item.data.variations.length < 2
+                        ? widget.item.data.name
+                        : widget
+                            .item.data.variations[widget.variation].data.name),
                     maxLines: 3,
                     style: GoogleFonts.libreFranklin(
                         fontSize: 28,
@@ -271,8 +283,10 @@ class _NewItemModalState extends State<NewItemModal> {
                     textCap: TextCapitalization.words,
                     enabled: true,
                     fieldTitle: "Name",
-                    initialText:
-                        widget.item.data.variations[widget.variation].data.name,
+                    initialText: (widget.item.data.variations.length < 2
+                        ? widget.item.data.name
+                        : widget
+                            .item.data.variations[widget.variation].data.name),
                     valFunc: (val) =>
                         val.isEmpty ? 'Please enter a name' : null,
                     onChanged: (val) => setState(() => name = val),

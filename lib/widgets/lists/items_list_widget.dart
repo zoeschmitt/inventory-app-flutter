@@ -44,25 +44,10 @@ class ItemsListWidget extends StatelessWidget {
                               },
                               child: AbsorbPointer(
                                 child: ItemContainerWidget(
-                                  name: model.products[index].data.variations
-                                              .length <
-                                          2
-                                      ? model.products[index].data.name
-                                      : model.products[index].data
-                                          .variations[index1].data.name,
-                                  sku: model.products[index].data.variations
-                                              .length >
-                                          1
-                                      ? model.products[index].data.name
-                                      : " ",
-                                  amount: model.products[index].data
-                                              .variations[index1].data.price !=
-                                          null
-                                      ? ("\$" +
-                                          price.substring(0, price.length - 2) +
-                                          "." +
-                                          price.substring(
-                                              price.length - 2, price.length))
+                                  name: model.products[index].data.variations.length < 2 ? model.products[index].data.name
+                                      : model.products[index].data.variations[index1].data.name,
+                                  sku: model.products[index].data.variations.length > 1 ? model.products[index].data.name : " ",
+                                  amount: model.products[index].data.variations[index1].data.price != null ? ("\$" + price.substring(0, price.length >= 2 ? price.length - 2 : price.length - 1) + "." + price.substring(price.length >= 2 ? price.length - 2 : price.length - 1, price.length))
                                       : (" "),
                                   imageId: model.products[index].data
                                                   .variations[index1].imageId !=

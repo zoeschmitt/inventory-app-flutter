@@ -65,7 +65,7 @@ class _AddLocationModalState extends State<AddLocationModal> {
                                 child: model.loading == true
                                     ? CircularProgressIndicator()
                                     : Text(
-                                        'Save',
+                                        'Add',
                                         style: TextStyle(
                                             color: (Colors.white),
                                             fontWeight: FontWeight.w500,

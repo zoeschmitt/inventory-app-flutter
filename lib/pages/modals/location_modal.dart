@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,9 +25,13 @@ class _LocationModalState extends State<LocationModal> {
   String _newQuantity = "";
   String _error = ' ';
   bool loading = false;
+  int add = 0;
+  
 
   @override
   Widget build(BuildContext context) {
+    _newQuantity = widget.location.amount;
+    double width = MediaQuery.of(context).size.width.toDouble();
     final model = Provider.of<InventoryModel>(context, listen: false);
     return Padding(
       padding:
@@ -92,10 +97,7 @@ class _LocationModalState extends State<LocationModal> {
                                 widget.item.id,
                                 _newQuantity,
                                 widget.location.id,
-                                (int.parse(_newQuantity) <
-                                        int.parse(widget.location.amount)
-                                    ? false
-                                    : true));
+                                add == 0 ? true : false);
                             if (result == null || false) {
                               setState(() {
                                 //loading = false;
@@ -124,8 +126,27 @@ class _LocationModalState extends State<LocationModal> {
                   padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+                      CupertinoSegmentedControl(
+                        children: {
+                          0: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("Add")),
+                          1: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("Remove")),
+                        },
+                        selectedColor: Styles.custBlue,
+                        borderColor: Styles.custBlue,
+                        groupValue: add,
+                        onValueChanged: (value) {
+                          setState(() => add = value);
+                        },
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
                       Text(
                         "Quantity",
                         style: GoogleFonts.sourceSansPro(
@@ -134,34 +155,37 @@ class _LocationModalState extends State<LocationModal> {
                             fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
-                        height: 8,
+                        height: 15,
                       ),
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        initialValue: widget.location.amount,
-                        enabled: true,
-                        style: GoogleFonts.sourceSansPro(
-                            fontSize: 16,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w400),
-                        autovalidate: false,
-                        inputFormatters: <TextInputFormatter>[
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        minLines: 1,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                              left: 20, right: 20, top: 15, bottom: 15),
-                          filled: true,
-                          fillColor: Styles.backgroundCol,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(9.0),
-                            borderSide: BorderSide.none,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width / 4),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          initialValue: widget.location.amount,
+                          enabled: true,
+                          style: GoogleFonts.sourceSansPro(
+                              fontSize: 16,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w400),
+                          autovalidate: false,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly
+                          ],
+                          minLines: 1,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(
+                                left: 20, right: 20, top: 15, bottom: 15),
+                            filled: true,
+                            fillColor: Styles.backgroundCol,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(9.0),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
+                          validator: (val) =>
+                              val.isEmpty ? 'Please enter a number' : null,
+                          onChanged: (val) => setState(() => _newQuantity = val),
                         ),
-                        validator: (val) =>
-                            val.isEmpty ? 'Please enter a number' : null,
-                        onChanged: (val) => setState(() => _newQuantity = val),
                       ),
                     ],
                   ),

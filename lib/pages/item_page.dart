@@ -6,7 +6,7 @@ import 'package:inventory/models/inventory_model.dart';
 import 'package:inventory/models/item.dart';
 import 'package:inventory/pages/modals/add_location_modal.dart';
 import 'package:inventory/pages/modals/location_modal.dart';
-import 'package:inventory/pages/modals/new_item_modal.dart';
+import 'package:inventory/pages/modals/edit_item_modal.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/image_carousel_widget.dart';
 import 'package:inventory/widgets/location_container_widget.dart';
@@ -252,7 +252,7 @@ class _ItemPageState extends State<ItemPage> {
                               shrinkWrap: true,
                               separatorBuilder:
                                   (BuildContext context, int index) {
-                                return SizedBox(height: 15.0);
+                                return SizedBox(height: 10.0);
                               },
                             ),
                     ],
@@ -332,7 +332,7 @@ void _editItemModal(
     context: context,
     isScrollControlled: true,
     builder: (context) => SingleChildScrollView(
-      child: NewItemModal(
+      child: EditItemModal(
           photosMultiplier: photosMultiplier,
           currentPhotos: imageIds,
           item: item,

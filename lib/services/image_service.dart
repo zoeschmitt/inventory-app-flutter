@@ -64,9 +64,9 @@ print(uri);
       "imageType": "productImage",
       "itemId": itemId,
     };
-    for(final asset in images) {
-      body.
-    }
+    // for(final asset in images) {
+    //   body.
+    // }
 
     final body1 = jsonEncode({"imageType": "productImage", "itemId": itemId});
     Response response =

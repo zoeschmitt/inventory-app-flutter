@@ -5,18 +5,25 @@ import 'package:inventory/services/image_service.dart';
 import 'package:inventory/services/product_service.dart';
 
 class InventoryModel with ChangeNotifier {
-  Locations _location = Locations(name: "All", id: "0");
-  Locations _newlocation = Locations(name: "All", id: "0");
-  Category _category = Category(name: "All", id: "0");
-  List<Category> _cats;
-  List<Locations> _locations;
-  List<Locations> _newlocations;
-  List<Item> _products;
+  Locations _location =
+      Locations(name: "All", id: "0"); //current filtered location - home page
+  Category _category =
+      Category(name: "All", id: "0"); //current filtered category - home page
+  List<Category> _cats; //current list of categories - home page
+  List<Locations> _locations; //current list of locations - home page
+  List<Item> _products; //main list of products - home page
   ProductService _service = ProductService();
   ImageService _imageService = ImageService();
-  String _search = "  ";
-  List<ItemLocationCount> _currentItemLocs = [];
+  String _search = "  "; //current search text - home page
   bool _isLoading = false;
+
+  List<ItemLocationCount> _currentItemLocs =
+      []; //list of locations for the add location - item page
+  List<Locations>
+      _newlocations; //current list of locations to add a new item to - item page
+  Locations _newlocation = Locations(
+      name: "All",
+      id: "0"); //current filter to add item to new location - item page
 
   List<ItemLocationCount> get currentLocs => _currentItemLocs;
   List<Item> get products => _products;
@@ -61,7 +68,7 @@ class InventoryModel with ChangeNotifier {
   void productService(String limit) {
     print("productService");
     print(_search);
-    _service.fetchProducts(limit, _search).then((value) {
+    _service.fetchProducts(limit ?? null, _search).then((value) {
       if (value.isNotEmpty) {
         print(value[0].id);
       }
@@ -74,6 +81,7 @@ class InventoryModel with ChangeNotifier {
           _products = _filterByLocation(value);
         } else if (location.name == "All" && category.name != "All") {
           _products = _filterByCat(value);
+          print(_products.length);
           print("filtered by cat");
         } else {
           _products = _filterByLocation(_filterByCat(value));
@@ -105,11 +113,11 @@ class InventoryModel with ChangeNotifier {
 
   List<Item> _filterByCat(List<Item> prods) {
     List<Item> pl = [];
-
-    pl = prods
-        .where((prod) => prod.data.categoryId.contains(category.id))
-        .toList();
-
+    prods.forEach((prod) {
+      if(prod.data.categoryId != null && prod.data.categoryId == category.id) {
+        pl.add(prod);
+      }
+    });
     return pl;
   }
 
@@ -181,14 +189,16 @@ class InventoryModel with ChangeNotifier {
     });
   }
 
-  Future<bool> changeInv(String catId, String quantity, String locId, bool add) async {
+  Future<bool> changeInv(
+      String itemId, String quantity, String locId, bool add) async {
     bool result = false;
     print("change inv service");
     _isLoading = true;
-    _service.updateInventory(catId, quantity, locId, add).then((value) {
+    _service.updateInventory(itemId, quantity, locId, add).then((value) {
       result = value;
       _isLoading = false;
-      notifyListeners();
+      getItemLocations(itemId);
+      // notifyListeners();
     }, onError: (error) {
       print(error);
     });

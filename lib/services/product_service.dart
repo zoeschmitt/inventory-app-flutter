@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/item.dart';
-import 'package:path_provider/path_provider.dart';
 
 class ProductService {
   static const PROD_POST_URL =
@@ -25,7 +24,7 @@ class ProductService {
       "Content-type": "application/json",
       "Accept": "*/*",
     };
-    final body1 = jsonEncode({"searchObject": searchProd, "limit": limit});
+    final body1 = limit == null ? jsonEncode({"searchObject": searchProd}) : jsonEncode({"searchObject": searchProd, "limit": limit});
     Response response =
         await post(PROD_POST_URL, headers: headers, body: body1); //int
     //print('Response body: ${response.body}'); // json
@@ -134,6 +133,7 @@ class ProductService {
 
   Future<bool> updateInventory(
       String catId, String quantity, String locId, bool add) async {
+        print("add" + add.toString());
     bool result = false;
     Map<String, String> headers = {
       "Content-type": "application/json",
