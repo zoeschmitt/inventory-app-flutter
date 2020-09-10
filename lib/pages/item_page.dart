@@ -15,6 +15,7 @@ import 'package:inventory/widgets/view_coa_report_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'modals/coa_modal.dart';
+import 'modals/photos_modal.dart';
 
 class ItemPage extends StatefulWidget {
   final Item item;
@@ -32,7 +33,8 @@ class _ItemPageState extends State<ItemPage> {
   @override
   void initState() {
     super.initState();
-    loadImages();
+    final model1 = Provider.of<InventoryModel>(context, listen: false);
+    model1.getItemLocations(widget.item.data.variations[widget.variation].id);
   }
 
   @override
@@ -40,14 +42,10 @@ class _ItemPageState extends State<ItemPage> {
     super.dispose();
   }
 
-  void loadImages() async {
-    final model1 = Provider.of<InventoryModel>(context, listen: false);
-    model1.getItemLocations(widget.item.data.variations[widget.variation].id);
-    images = await model1.getImageIds(widget.item.id);
-  }
-
   @override
   Widget build(BuildContext context) {
+    //print("variation image id" + widget.item.data.variations[widget.variation].imageId);
+    print("item image id" + widget.item.imageId);
     return Consumer<InventoryModel>(builder: (context, model, _) {
       price = widget.item.data.variations[widget.variation].data.price.amount
           .toString();
@@ -73,12 +71,23 @@ class _ItemPageState extends State<ItemPage> {
                         },
                         child: CustomButton(icon: SFSymbols.chevron_left),
                       ),
-                      GestureDetector(
-                          onTap: () {
-                            _editItemModal(
-                                context, widget.item, widget.variation, images);
-                          },
-                          child: CustomButton(icon: Icons.mode_edit)),
+                      Row(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                //_photosModal(context, widget.item.data.variations[widget.variation].id);
+                                _photosModal(context, widget.item.id);
+                              },
+                              child: CustomButton(icon: Icons.image)),
+                          SizedBox(width: 10),
+                          GestureDetector(
+                              onTap: () {
+                                _editItemModal(
+                                    context, widget.item, widget.variation);
+                              },
+                              child: CustomButton(icon: Icons.mode_edit)),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -138,19 +147,22 @@ class _ItemPageState extends State<ItemPage> {
                                   size: 20,
                                 ),
                                 SizedBox(width: 7),
-                                Text(
-                                  ("SKU " +
-                                      widget
-                                          .item
-                                          .data
-                                          .variations[widget.variation]
-                                          .data
-                                          .sku),
-                                  maxLines: 2,
-                                  style: GoogleFonts.libreFranklin(
-                                      fontSize: 16,
-                                      color: Colors.black26,
-                                      fontWeight: FontWeight.w400),
+                                Flexible(
+                                  fit: FlexFit.tight,
+                                  child: Text(
+                                    ("SKU " +
+                                        widget
+                                            .item
+                                            .data
+                                            .variations[widget.variation]
+                                            .data
+                                            .sku),
+                                    maxLines: 3,
+                                    style: GoogleFonts.libreFranklin(
+                                        fontSize: 16,
+                                        color: Colors.black26,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ],
                             )
@@ -166,13 +178,16 @@ class _ItemPageState extends State<ItemPage> {
                                   size: 20,
                                 ),
                                 SizedBox(width: 7),
-                                Text(
-                                  widget.item.data.name,
-                                  maxLines: 2,
-                                  style: GoogleFonts.libreFranklin(
-                                      fontSize: 16,
-                                      color: Colors.black26,
-                                      fontWeight: FontWeight.w400),
+                                Flexible(
+                                  fit: FlexFit.tight,
+                                  child: Text(
+                                    widget.item.data.name,
+                                    maxLines: 3,
+                                    style: GoogleFonts.libreFranklin(
+                                        fontSize: 16,
+                                        color: Colors.black26,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ],
                             ),
@@ -181,7 +196,7 @@ class _ItemPageState extends State<ItemPage> {
                 ),
                 SizedBox(height: 25),
                 ImageCarouselWidget(
-                  images: images,
+                  id: widget.item.id,
                 ),
                 SizedBox(height: 25),
                 Padding(
@@ -190,15 +205,24 @@ class _ItemPageState extends State<ItemPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      GestureDetector(
-                          onTap: () async {
-                            print("tapped coa");
-                            String coa = await model.getCOA(widget.item.data
-                                .variations[widget.variation].data.itemId);
-                            print("in coa tapped: " + coa);
-                            _coaModal(context, coa);
-                          },
-                          child: ViewCOAReportWidget()),
+                      Builder(
+                        builder: (context) =>
+                                             GestureDetector(
+                            onTap: () async {
+                              print("tapped coa");
+                              String coa = await model.getCOA(widget.item.data
+                                  .variations[widget.variation].data.itemId);
+
+                              if (coa != null && coa.isNotEmpty) {
+                                _coaModal(context, coa);
+                              } else {
+                                final snackBar =
+                                    SnackBar(content: Text('No COA Id Found'));
+                                Scaffold.of(context).showSnackBar(snackBar);
+                              }
+                            },
+                            child: ViewCOAReportWidget()),
+                      ),
                       SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -265,78 +289,86 @@ class _ItemPageState extends State<ItemPage> {
       );
     });
   }
-}
 
-void _locationModal(
-    BuildContext context, ItemLocationCount location, ItemVariation item) {
-  showModalBottomSheet(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(16.0),
-        topRight: Radius.circular(16.0),
+  void _locationModal(
+      BuildContext context, ItemLocationCount location, ItemVariation item) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
       ),
-    ),
-    context: context,
-    isScrollControlled: true,
-    builder: (context) => Container(
-      //height: MediaQuery.of(context).size.height * 0.5,
-      child: LocationModal(location: location, item: item),
-    ),
-  );
-}
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        //height: MediaQuery.of(context).size.height * 0.5,
+        child: LocationModal(location: location, item: item),
+      ),
+    );
+  }
 
-void _addLocationModal(BuildContext context, ItemVariation item) {
-  showModalBottomSheet(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(16.0),
-        topRight: Radius.circular(16.0),
+  void _addLocationModal(BuildContext context, ItemVariation item) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
       ),
-    ),
-    context: context,
-    isScrollControlled: true,
-    builder: (context) => Container(
-      //height: MediaQuery.of(context).size.height * 0.5,
-      child: AddLocationModal(item: item),
-    ),
-  );
-}
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        //height: MediaQuery.of(context).size.height * 0.5,
+        child: AddLocationModal(item: item),
+      ),
+    );
+  }
 
-void _coaModal(BuildContext context, String id) {
-  showModalBottomSheet(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(16.0),
-        topRight: Radius.circular(16.0),
+  void _coaModal(BuildContext context, String id) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
       ),
-    ),
-    context: context,
-    isScrollControlled: true,
-    builder: (context) => Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      child: COAModal(id: id),
-    ),
-  );
-}
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.9,
+        child: COAModal(id: id),
+      ),
+    );
+  }
 
-void _editItemModal(
-    BuildContext context, Item item, int variation, List<String> imageIds) {
-  final photosMultiplier = 0.1;
-  showModalBottomSheet(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(16.0),
-        topRight: Radius.circular(16.0),
+  void _editItemModal(BuildContext context, Item item, int variation) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
       ),
-    ),
-    context: context,
-    isScrollControlled: true,
-    builder: (context) => SingleChildScrollView(
-      child: EditItemModal(
-          photosMultiplier: photosMultiplier,
-          currentPhotos: imageIds,
-          item: item,
-          variation: variation),
-    ),
-  );
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => SingleChildScrollView(
+        child: EditItemModal(item: item, variation: variation),
+      ),
+    );
+  }
+
+  void _photosModal(BuildContext context, String id) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => PhotosModal(id: id),
+    );
+  }
 }

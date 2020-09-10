@@ -3,6 +3,9 @@ import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/item.dart';
 import 'package:inventory/services/image_service.dart';
 import 'package:inventory/services/product_service.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+
+import 'item_image_model.dart';
 
 class InventoryModel with ChangeNotifier {
   Locations _location =
@@ -47,7 +50,7 @@ class InventoryModel with ChangeNotifier {
       _currentItemLocs = locs;
 
   InventoryModel() {
-    productService("20");
+    productService(limit: "20");
     getCats();
     getLocations();
   }
@@ -62,17 +65,18 @@ class InventoryModel with ChangeNotifier {
       _search = prod;
     }
 
-    productService("20");
+    productService(limit: "20");
   }
 
-  void productService(String limit) {
+  void productService({String limit}) {
     print("productService");
     print(_search);
-    _service.fetchProducts(limit ?? null, _search).then((value) {
+    _service.fetchProducts(_search, limit: limit != null ? limit : null).then(
+        (value) {
       if (value.isNotEmpty) {
         print(value[0].id);
       }
-
+      print("service");
       if (location.name != "All" || category.name != "All") {
         print("filtering");
 
@@ -98,6 +102,7 @@ class InventoryModel with ChangeNotifier {
   }
 
   List<Item> _filterByLocation(List<Item> prods) {
+    print("filter by location");
     List<Item> pl = [];
     for (final p in prods) {
       if (p.data.variations != null) {
@@ -112,9 +117,10 @@ class InventoryModel with ChangeNotifier {
   }
 
   List<Item> _filterByCat(List<Item> prods) {
+    print("filter by category");
     List<Item> pl = [];
     prods.forEach((prod) {
-      if(prod.data.categoryId != null && prod.data.categoryId == category.id) {
+      if (prod.data.categoryId != null && prod.data.categoryId == category.id) {
         pl.add(prod);
       }
     });
@@ -164,8 +170,6 @@ class InventoryModel with ChangeNotifier {
     return itemCat;
   }
 
-  void getItemImages(String id) {}
-
   void getItemLocations(String id) {
     print("location count service");
     _isLoading = true;
@@ -208,8 +212,8 @@ class InventoryModel with ChangeNotifier {
 
   Future<String> getCOA(String id) async {
     String coaUrl = "";
-    _service.getCOAId(id).then((value) {
-      if (value != null) {
+    await _service.getCOAId(id).then((value) {
+      if (value != null || value.isNotEmpty) {
         coaUrl = value;
         print("in model coa: " + coaUrl);
       }
@@ -220,14 +224,11 @@ class InventoryModel with ChangeNotifier {
     return coaUrl;
   }
 
-  Future<List<String>> getImageIds(String id) async {
-    List<String> ids = [];
-    _imageService.getImageIds(id).then((value) {
+  Future<List<ItemImage>> getImageIds(String id) async {
+    List<ItemImage> ids = [];
+    await _imageService.getImageIds(id).then((value) {
       if (value != null) {
         ids = value;
-        if (ids.isNotEmpty) {
-          print("in model img: " + ids[0]);
-        }
       }
       //notifyListeners();
     }, onError: (error) {
@@ -240,7 +241,37 @@ class InventoryModel with ChangeNotifier {
     bool result = false;
     print("change inv service");
     _isLoading = true;
-    _service.updateProduct(item).then((value) {
+    await _service.updateProduct(item).then((value) {
+      result = value;
+      _isLoading = false;
+      notifyListeners();
+    }, onError: (error) {
+      print(error);
+    });
+
+    return result;
+  }
+
+  Future<bool> deleteImage(String itemId, String imageName) async {
+    bool result = false;
+    print("delete img service");
+    _isLoading = true;
+    await _imageService.deleteImage(itemId, imageName).then((value) {
+      result = value;
+      _isLoading = false;
+      notifyListeners();
+    }, onError: (error) {
+      print(error);
+    });
+
+    return result;
+  }
+
+    Future<bool> addImage(String itemId, Asset asset) async {
+    bool result = false;
+    print("add img service");
+    _isLoading = true;
+    await _imageService.addImage(itemId, asset).then((value) {
       result = value;
       _isLoading = false;
       notifyListeners();

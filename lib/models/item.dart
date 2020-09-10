@@ -11,7 +11,7 @@ class Item {
       type: parsedJson['type'],
       id: parsedJson['id'],
       imageId: parsedJson['image_id'],
-      data: ItemData.fromJson(parsedJson['item_data']),
+      data: parsedJson['item_data'] != null ? ItemData.fromJson(parsedJson['item_data']) : null,
     );
   }
 
@@ -71,7 +71,7 @@ class ItemVariation {
       id: parsedJson['id'],
       locationsPresent: locList,
       imageId: parsedJson['image_id'],
-      data: ItemVariationData.fromJson(parsedJson['item_variation_data']),
+      data: parsedJson['item_variation_data'] != null ? ItemVariationData.fromJson(parsedJson['item_variation_data']) : null,
     );
   }
 
@@ -82,7 +82,7 @@ class ItemVariation {
     'image_id': imageId,
     'name': data.name,
     'pricing_type': data.priceType,
-    'price': data.price
+    'price_money': data.price
   }; 
 }
 
@@ -101,7 +101,7 @@ class ItemVariationData {
       name: parsedJson['name'],
       sku: parsedJson['sku'],
       priceType: parsedJson['pricing_type'],
-      price: Price.fromJson(parsedJson['price_money']),
+      price: parsedJson['price_money'] != null ? Price.fromJson(parsedJson['price_money']) : null,
     );
   }
 

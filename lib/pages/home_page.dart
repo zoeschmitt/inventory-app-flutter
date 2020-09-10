@@ -20,8 +20,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final model = Provider.of<InventoryModel>(context, listen: false);
     
     if (controller.position.pixels == controller.position.maxScrollExtent) {
-     
-      model.productService((model.products.length + 20).toString());
+     model.category.name != "All" || model.location.name != "All" ? print("loaded all") : model.productService(limit: (model.products.length + 20).toString());;
     }
   }
 
@@ -64,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
         bottom: false,
         child: RefreshIndicator(
           onRefresh: () async {
-            model.productService("20");
+            model.category.name != "All" || model.location.name != "All" ? print("loaded all") : model.productService(limit: "20");
           },
           child: SingleChildScrollView(
             controller: controller,

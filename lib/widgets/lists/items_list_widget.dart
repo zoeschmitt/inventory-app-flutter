@@ -49,18 +49,8 @@ class ItemsListWidget extends StatelessWidget {
                                   sku: model.products[index].data.variations.length > 1 ? model.products[index].data.name : " ",
                                   amount: model.products[index].data.variations[index1].data.price != null ? ("\$" + price.substring(0, price.length >= 2 ? price.length - 2 : price.length - 1) + "." + price.substring(price.length >= 2 ? price.length - 2 : price.length - 1, price.length))
                                       : (" "),
-                                  imageId: model.products[index].data
-                                                  .variations[index1].imageId !=
-                                              null ||
-                                          model
-                                              .products[index]
-                                              .data
-                                              .variations[index1]
-                                              .imageId == ""
-                                              
-                                      ? model.products[index].data
-                                          .variations[index1].imageId
-                                      : "",
+                                  imageId: model.products[index].imageId != null 
+                                      ? model.products[index].imageId : "",
                                 ),
                               ),
                             );

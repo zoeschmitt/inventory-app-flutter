@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:inventory/pages/modals/privacy_policy_modal.dart';
 import 'package:inventory/services/firebase_auth_service.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/settings_option.dart';
@@ -61,23 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     )),
                 SizedBox(height: 20),
                 GestureDetector(
-                    onTap: () {},
-                    child: SettingsOption(
-                      title: 'Export',
-                      icon: SFSymbols.square_arrow_up_fill,
-                    )),
-                // SizedBox(height: 20),
-                // GestureDetector(
-                //     onTap: () {},
-                //     child: SettingsOption(
-                //       title: 'Share',
-                //       icon: Icons.share,
-                //     )),
-                SizedBox(height: 20),
-                GestureDetector(
-                    onTap: () {
-                      print("object");
-                    },
+                    onTap: () => _policyModal(context),
                     child: SettingsOption(
                       title: 'Privacy',
                       icon: SFSymbols.shield_fill,
@@ -114,6 +99,20 @@ class _SettingsPageState extends State<SettingsPage> {
         height: MediaQuery.of(context).size.height * 0.93,
         child: AccountModal(),
       ),
+    );
+  }
+
+  _policyModal(BuildContext context) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => PrivacyPolicyModal(),
     );
   }
 }

@@ -6,10 +6,28 @@ import 'package:inventory/models/inventory_model.dart';
 import 'package:inventory/widgets/modal_title_widget.dart';
 import 'package:provider/provider.dart';
 
-class FilterWidget extends StatelessWidget {
+class FilterWidget extends StatefulWidget {
   const FilterWidget({
     Key key,
   }) : super(key: key);
+
+  @override
+  _FilterWidgetState createState() => _FilterWidgetState();
+}
+
+class _FilterWidgetState extends State<FilterWidget> {
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+   
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +64,7 @@ class FilterWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ModalTitleWidget(title: "Filters"),
+                      //_loading ? Container(child: CircularProgressIndicator()) : Container(),
                       SizedBox(height: 20.0),
                       Consumer<InventoryModel>(//                  <--- Consumer
                           builder: (context, myModel, _) {
@@ -78,17 +97,27 @@ class FilterWidget extends StatelessWidget {
                                   icon: Icon(Icons.arrow_drop_down),
                                   iconSize: 42,
                                   underline: SizedBox(),
-                                  onChanged: (newValue) {
+                                  onChanged: (newValue) async {
+                                    // setState(() {
+                                    //   _loading = true;
+                                    // });
                                     print("new category set");
                                     model.catSet = newValue;
-                                    model.productService(null);
+                                    newValue.name == "All"
+                                        ? model.productService(limit: "20")
+                                        : model.productService();
+                                    // setState(() {
+                                    //   _loading = false;
+                                    // });
                                   },
                                   items: myModel.categories == null
                                       ? List<DropdownMenuItem<Category>>()
                                       : myModel.categories
                                           .map((value) => DropdownMenuItem(
                                                 child: Text(
-                                                  value.name != null ? value.name : " ",
+                                                  value.name != null
+                                                      ? value.name
+                                                      : " ",
                                                   style: TextStyle(
                                                       color: Colors.black),
                                                 ),
@@ -123,10 +152,18 @@ class FilterWidget extends StatelessWidget {
                                   icon: Icon(Icons.arrow_drop_down),
                                   iconSize: 42,
                                   underline: SizedBox(),
-                                  onChanged: (newValue) {
+                                  onChanged: (newValue) async {
+                                    // setState(() {
+                                    //   _loading = true;
+                                    // });
                                     print("new location set");
                                     model.locationSet = newValue;
-                                    model.productService(null);
+                                    newValue.name == "All"
+                                        ? model.productService(limit: "20")
+                                        : model.productService();
+                                    // setState(() {
+                                    //   _loading = false;
+                                    // });
                                   },
                                   items: myModel.locationList == null
                                       ? List<DropdownMenuItem<Locations>>()
@@ -143,7 +180,8 @@ class FilterWidget extends StatelessWidget {
                                 )),
                           ],
                         );
-                      })
+                      }),
+                      
                     ],
                   ),
                 ),

@@ -237,6 +237,8 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 6.5)
     - PromisesObjC (~> 1.2)
   - Flutter (1.0.0)
+  - flutter_pdfview (1.0.2):
+    - Flutter
   - GoogleAppMeasurement (6.3.1):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -302,6 +304,7 @@ DEPENDENCIES:
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `Flutter`)
+  - flutter_pdfview (from `.symlinks/plugins/flutter_pdfview/ios`)
   - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
@@ -342,6 +345,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   Flutter:
     :path: Flutter
+  flutter_pdfview:
+    :path: ".symlinks/plugins/flutter_pdfview/ios"
   multi_image_picker:
     :path: ".symlinks/plugins/multi_image_picker/ios"
   path_provider:
@@ -368,6 +373,7 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 71925e62a5d1cbfaff46aa4d5107e525cc48356a
   FirebaseInstallations: 575cd32f2aec0feeb0e44f5d0110a09e5e60b47b
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_pdfview: 25f53dd6097661e6395b17de506e6060585946bd
   GoogleAppMeasurement: c29d405ff76e18551b5d158eaba6753fda8c7542
   GoogleDataTransport: a857c6a002d201b524dd4bc2ed7e7355ed07e785
   GoogleDataTransportCCTSupport: 32f75fbe904c82772fcbb6b6bd4525bfb6f2a862
@@ -382,6 +388,6 @@ SPEC CHECKSUMS:
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
 
 COCOAPODS: 1.8.4

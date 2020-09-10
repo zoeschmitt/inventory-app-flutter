@@ -1,86 +1,89 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:inventory/models/item_image_model.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class ImageService {
- static const BASE_URL = "alamoapp-devalamoapp.azurewebsites.net";
- static const IMG_BASE_URL = 'https://marketingstoreimages.blob.core.windows.net/productimages/';
+  static const BASE_URL = "alamoapp.azurewebsites.net";
 
-
-  Future<List<String>> getImageIds(String id) async {
-   List< String> ids = [];
-   print("item id in image: " + id);
+  Future<List<ItemImage>> getImageIds(String id) async {
+    List<ItemImage> imgs = [];
+    print("item id in image: " + id);
 
     final uri = new Uri.https(BASE_URL, '/api/getItemImage', {"id": id});
-print(uri);
+    print(uri);
     Response response = await get(uri);
 
     if (response.statusCode == 200) {
-
       print("image response code" + response.statusCode.toString());
 
       if (jsonDecode(response.body) != null) {
-
         var images = jsonDecode(response.body)['itemImages'] as List;
-        ids = images.map<String>((m) => m['imageId'] as String).toList();
-    
+        //ids = images.map<String>((m) => m['imageId'] as String).toList();
+        imgs = images.map((i) => ItemImage.fromJson(i)).toList();
       }
 
-      if (ids.isNotEmpty) {
-        print("ids after map" + ids[0]);
+      if (imgs.isNotEmpty) {
+        print("ids after map" + imgs[0].id);
       }
       print("image ids done");
-
     } else {
-      print('Response coaId status: ${response.statusCode}');
+      print('Response get iamges status: ${response.statusCode}');
     }
 
-    return ids;
+    return imgs;
   }
 
-  Future<bool> deleteImage(String id, String imageId) async {
-   bool status = false;
+  Future<bool> deleteImage(String id, String imageName) async {
+    bool status = false;
     final uri = new Uri.https(
-        BASE_URL, '/api/DeleteImage', {"id": id, "imageName": imageId});
+        BASE_URL, '/api/DeleteImage', {"id": id, "imageName": imageName});
+
     Response response = await get(uri);
 
     if (response.statusCode == 200) {
       status = true;
-      print("locQ done");
+      print("delete image done");
     } else {
-      print('Response locq status: ${response.statusCode}');
+      print('Response delete image status: ${response.statusCode}');
+      print('Response dbodyelete image status: ${response.body}');
     }
 
     return status;
   }
 
-  Future<bool> addImage(String itemId, String searchProd, List<Asset> images) async {
-   bool status = false;
-    Map<String, String> headers = {
-      "Content-type": "application/json",
-      "Accept": "*/*",
-    };
-    Map<String, dynamic> body = {
-      "imageType": "productImage",
-      "itemId": itemId,
-    };
-    // for(final asset in images) {
-    //   body.
-    // }
+  Future<bool> addImage(String itemId, Asset asset) async {
+    bool status = false;
+    ByteData byteData = await asset.getByteData();
+    List<int> imageData = byteData.buffer.asUint8List();
 
-    final body1 = jsonEncode({"imageType": "productImage", "itemId": itemId});
-    Response response =
-        await post(BASE_URL, headers: headers, body: body1); //int
-    //print('Response body: ${response.body}'); // json
+    Uri uri = Uri.parse('https://alamoapp.azurewebsites.net/api/addImage');
+    print(itemId);
+
+    MultipartRequest request = MultipartRequest("POST", uri);
+
+    request.fields['imageType'] = 'productImage';
+    request.fields['itemId'] = itemId;
+
+    request.files.add(MultipartFile.fromBytes(
+      'image',
+      imageData,
+      filename: asset.name + ".jpg",
+      contentType: MediaType("image", "jpg"),
+    ));
+  print(request.fields);
+  print(request.files[0].contentType);
+    var response = await request.send();
+    print(response.reasonPhrase);
     if (response.statusCode == 200) {
       status = true;
-      print("prodycts gotten");
-     
+      print("images added");
     } else {
-      print('Response status: ${response.statusCode}');
+      print('Add Image Response status: ${response.statusCode}');
     }
 
     return status;
   }
-
 }

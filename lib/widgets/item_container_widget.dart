@@ -8,7 +8,7 @@ class ItemContainerWidget extends StatelessWidget {
   final String sku;
   final String amount;
   final String imageId;
-  static const IMG_BASE_URL = 'https://marketingstoreimages.blob.core.windows.net/productimages/';
+  static const IMG_BASE_URL = 'https://alamo-botanicals-shop.imgix.net/';
 
   const ItemContainerWidget({
     Key key,
@@ -26,10 +26,11 @@ class ItemContainerWidget extends StatelessWidget {
         children: <Widget>[
           // possible backlogged, item image
           Container(
-            child: (imageId != null && imageId.isNotEmpty) ? (Image.network(IMG_BASE_URL + imageId)) : Container(),
             decoration: BoxDecoration(
+              image: (imageId != null && imageId.isNotEmpty) ? DecorationImage(
+        fit: BoxFit.cover, image: NetworkImage(IMG_BASE_URL + imageId)) : null,
               borderRadius: BorderRadius.all(Radius.circular(15)),
-              color: Colors.grey[300],
+              color: Colors.white,
             ),
             height: MediaQuery.of(context).size.width / 5,
             width: MediaQuery.of(context).size.width / 5,

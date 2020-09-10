@@ -18,20 +18,25 @@ class ProductService {
   static const UPDATE_URL =
       'https://alamoapp.azurewebsites.net/api/AddUpdateItem';
 
-  Future<List<Item>> fetchProducts(String limit, String searchProd) async {
+  Future<List<Item>> fetchProducts(String searchProd, {String limit}) async {
     List<Item> prods = [];
     Map<String, String> headers = {
       "Content-type": "application/json",
       "Accept": "*/*",
     };
+    
     final body1 = limit == null ? jsonEncode({"searchObject": searchProd}) : jsonEncode({"searchObject": searchProd, "limit": limit});
+    
     Response response =
         await post(PROD_POST_URL, headers: headers, body: body1); //int
     //print('Response body: ${response.body}'); // json
     if (response.statusCode == 200) {
       if (jsonDecode(response.body)['objects'] != null) {
+        print("json decode");
         var prod = jsonDecode(response.body)['objects'] as List;
+        //print("json decode list");
         prods = prod.map((i) => Item.fromJson(i)).toList();
+        print("json decode after");
       }
 
       print("prodycts gotten");
@@ -170,11 +175,13 @@ class ProductService {
       "Accept": "*/*",
     };
     final body1 = jsonEncode(item);
-    print(body1);
+    //print(body1);
     Response response =
         await post(UPDATE_URL, headers: headers, body: body1); //int
     print('Response body: ${response.body}'); // json
-    if (response.statusCode == 200) {
+    Map<String, dynamic> resp = jsonDecode(response.body);
+
+    if (response.statusCode == 200 && resp["errors"] == null) {
       print("prodyct updated");
       status = true;
     } else {
@@ -183,22 +190,4 @@ class ProductService {
 
     return status;
   }
-
-  //   static Future<String> loadPDF(String itemId) async {
-  //     String coaId = "";
-  //     var response1 = await get(COA_URL + itemId);
-
-  //   var dir = await getApplicationDocumentsDirectory();
-  //   File file = new File("${dir.path}/data.pdf");
-  //   file.writeAsBytesSync(response1.bodyBytes, flush: true);
-  //   return file.path;
-
-  //   var response2 = await get(BASE_URL);
-
-  //   var dir = await getApplicationDocumentsDirectory();
-  //   File file = new File("${dir.path}/data.pdf");
-  //   file.writeAsBytesSync(response2.bodyBytes, flush: true);
-  //   return file.path;
-  // }
-
 }
