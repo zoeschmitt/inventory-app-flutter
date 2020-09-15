@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/item.dart';
+import 'package:inventory/models/single_item.dart';
 
 class ProductService {
   static const PROD_POST_URL =
@@ -12,9 +13,8 @@ class ProductService {
       "https://alamoapp.azurewebsites.net/api/GetAllCategory";
   static const ADD_INV_URL =
       "https://alamoapp.azurewebsites.net/api/AddInventory";
-  static const BASE_URL = "alamoapp-devalamoapp.azurewebsites.net";
-  static const COA_PDF_URL =
-      "https://marketingstoreimages.blob.core.windows.net/labreports/";
+  static const BASE_URL = "alamoapp.azurewebsites.net";
+
   static const UPDATE_URL =
       'https://alamoapp.azurewebsites.net/api/AddUpdateItem';
 
@@ -24,23 +24,25 @@ class ProductService {
       "Content-type": "application/json",
       "Accept": "*/*",
     };
-    
-    final body1 = limit == null ? jsonEncode({"searchObject": searchProd}) : jsonEncode({"searchObject": searchProd, "limit": limit});
-    
+
+    final body1 = limit == null
+        ? jsonEncode({"searchObject": searchProd})
+        : jsonEncode({"searchObject": searchProd, "limit": limit});
+
     Response response =
         await post(PROD_POST_URL, headers: headers, body: body1); //int
     //print('Response body: ${response.body}'); // json
     if (response.statusCode == 200) {
       if (jsonDecode(response.body)['objects'] != null) {
-        print("json decode");
+        //print("json decode");
         var prod = jsonDecode(response.body)['objects'] as List;
         //print("json decode list");
         prods = prod.map((i) => Item.fromJson(i)).toList();
-        print("json decode after");
+        //print("json decode after");
       }
 
-      print("prodycts gotten");
-      print(prods.length);
+      // print("prodycts gotten");
+      // print(prods.length);
     } else {
       print('Response status: ${response.statusCode}');
     }
@@ -48,18 +50,38 @@ class ProductService {
     return prods;
   }
 
+    Future<SingleItem> getSingleItem(String id) async {
+    SingleItem item;
+
+    final uri = new Uri.https(BASE_URL, '/api/GetSingleItem', {"id": id});
+
+    Response response = await get(uri);
+
+    //print("single item");
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body)['cosmos'];
+      //print(response.body);
+      item = SingleItem.fromJson(json);     
+      //print("single item done");
+    } else {
+      print('Response status: ${response.statusCode}');
+    }
+
+    return item;
+  }
+
   Future<List<Category>> getCategories() async {
     List<Category> cats = [];
     var response = await get(
       CATEGORY_GET_URL,
     );
-    print("category service internal");
+    //print("category service internal");
     if (response.statusCode == 200) {
       var cat = jsonDecode(response.body)['cosmos'] as List;
       cats = cat.map((i) => Category.fromJson(i)).toList();
-      //cats = cat.map<Category>((m) => m['name'] as Category).toList();
       cats.insert(0, Category(name: "All", id: "0"));
-      print("cats done");
+      //print("cats done");
     } else {
       print('Response status: ${response.statusCode}');
     }
@@ -77,7 +99,7 @@ class ProductService {
       var loc = jsonDecode(response.body)['cosmos'] as List;
       locs = loc.map((i) => Locations.fromJson(i)).toList();
       locs.insert(0, Locations(name: "All", id: "0"));
-      print("locs done");
+      //print("locs done");
     } else {
       print('Response status: ${response.statusCode}');
     }
@@ -87,7 +109,7 @@ class ProductService {
 
   Future<List<ItemLocationCount>> getLocationQuantities(String id) async {
     List<ItemLocationCount> locQ = [];
-    print(id);
+    //print(id);
     final uri = new Uri.https(
         BASE_URL, '/api/GetInventoryCount', {"catalog_object_ids": id});
     Response response = await get(uri);
@@ -97,10 +119,8 @@ class ProductService {
         var loc = jsonDecode(response.body)['counts'] as List;
         locQ = loc.map((i) => ItemLocationCount.fromJson(i)).toList();
       }
-      if (locQ.isNotEmpty) {
-        print(locQ.length);
-      }
-      print("locQ done");
+ 
+      //print("locQ done");
     } else {
       print('Response locq status: ${response.statusCode}');
     }
@@ -109,36 +129,41 @@ class ProductService {
   }
 
   Future<String> getCOAId(String id) async {
-    String coaId = "";
-    print("coaId" + id);
+    String coaUri;
+    //print("coaId" + id);
 
-    final uri = new Uri.https(BASE_URL, '/api/GetCOA', {"id": id});
+    final uri = new Uri.https(BASE_URL, '/api/GetBlobsByProductId', {"productid": id});
 
     Response response = await get(uri);
-
+    //print(response.body);
     if (response.statusCode == 200) {
-      print("coa response code" + response.statusCode.toString());
+
       if (jsonDecode(response.body) != null) {
-        var coa = jsonDecode(response.body) as List;
-        print("coa as list" + coa.toString());
-        //cats = cat.map<Category>((m) => m['name'] as Category).toList();
-        coaId = coa.map<String>((e) => e['COAID']).toString();
-        print("coa as map" + coaId);
+
+        var json = jsonDecode(response.body);
+        if (json['data'] != null && (json['data']?.isNotEmpty ?? false)) {
+          try {
+            var coa = jsonDecode(response.body)['data'] as List;
+            //print(coa);
+            coaUri = coa.map<String>((e) => e['imageUri']).toString();
+            coaUri = coaUri.substring(1, coaUri.length - 1);
+            //print(coaUri);
+          } catch (e) {
+            print("could not get coa");
+          }    
+        }
       }
-      if (coaId.isNotEmpty) {
-        print(coaId.substring(1, coaId.length - 1));
-      }
-      print("coaId done");
+      //print("coaId done");
     } else {
       print('Response coaId status: ${response.statusCode}');
     }
 
-    return coaId.substring(1, coaId.length - 1);
+    return coaUri;
   }
 
   Future<bool> updateInventory(
       String catId, String quantity, String locId, bool add) async {
-        print("add" + add.toString());
+    //print("add" + add.toString());
     bool result = false;
     Map<String, String> headers = {
       "Content-type": "application/json",
@@ -154,12 +179,12 @@ class ProductService {
     });
     Response response =
         await post(ADD_INV_URL, headers: headers, body: body1); //int
-    print(catId);
-    print(quantity);
-    print(locId);
+    // print(catId);
+    // print(quantity);
+    // print(locId);
     if (response.statusCode == 200) {
-      print(response.statusCode);
-      print(response.body);
+      // print(response.statusCode);
+      // print(response.body);
       result = true;
     } else {
       print('Response status: ${response.statusCode}');
@@ -168,7 +193,7 @@ class ProductService {
     return result;
   }
 
-  Future<bool> updateProduct(Item item) async {
+  Future<bool> updateProduct(SingleItem item) async {
     bool status = false;
     Map<String, String> headers = {
       "Content-type": "application/json",
@@ -178,11 +203,11 @@ class ProductService {
     //print(body1);
     Response response =
         await post(UPDATE_URL, headers: headers, body: body1); //int
-    print('Response body: ${response.body}'); // json
+    
     Map<String, dynamic> resp = jsonDecode(response.body);
-
+    //print(resp);
     if (response.statusCode == 200 && resp["errors"] == null) {
-      print("prodyct updated");
+      //print("prodyct updated");
       status = true;
     } else {
       print('Response status: ${response.statusCode}');

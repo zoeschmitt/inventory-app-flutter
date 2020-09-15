@@ -5,7 +5,7 @@ import 'package:inventory/widgets/small_container.dart';
 
 class ItemContainerWidget extends StatelessWidget {
   final String name;
-  final String sku;
+  final String itemName;
   final String amount;
   final String imageId;
   static const IMG_BASE_URL = 'https://alamo-botanicals-shop.imgix.net/';
@@ -13,7 +13,7 @@ class ItemContainerWidget extends StatelessWidget {
   const ItemContainerWidget({
     Key key,
     this.name,
-    this.sku,
+    this.itemName,
     this.amount, this.imageId, 
   }) : super(key: key);
 
@@ -72,7 +72,7 @@ class ItemContainerWidget extends StatelessWidget {
                     Flexible(
                       fit: FlexFit.tight,
                       child: Text(
-                        sku,
+                        itemName,
                         style: GoogleFonts.sourceSansPro(
                             fontSize: 18,
                             color: Colors.black54,

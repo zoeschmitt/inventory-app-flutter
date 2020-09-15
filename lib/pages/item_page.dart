@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/inventory_model.dart';
 import 'package:inventory/models/item.dart';
+import 'package:inventory/models/single_item.dart';
+import 'package:inventory/pages/coa_page.dart';
 import 'package:inventory/pages/modals/add_location_modal.dart';
 import 'package:inventory/pages/modals/location_modal.dart';
 import 'package:inventory/pages/modals/edit_item_modal.dart';
@@ -13,8 +15,6 @@ import 'package:inventory/widgets/location_container_widget.dart';
 import 'package:inventory/widgets/small_container.dart';
 import 'package:inventory/widgets/view_coa_report_widget.dart';
 import 'package:provider/provider.dart';
-
-import 'modals/coa_modal.dart';
 import 'modals/photos_modal.dart';
 
 class ItemPage extends StatefulWidget {
@@ -29,12 +29,13 @@ class ItemPage extends StatefulWidget {
 class _ItemPageState extends State<ItemPage> {
   String price = "";
   List<String> images = [];
+  SingleItem singleItem = SingleItem();
+  String coa;
 
   @override
   void initState() {
     super.initState();
-    final model1 = Provider.of<InventoryModel>(context, listen: false);
-    model1.getItemLocations(widget.item.data.variations[widget.variation].id);
+    getItemInfo();
   }
 
   @override
@@ -42,10 +43,18 @@ class _ItemPageState extends State<ItemPage> {
     super.dispose();
   }
 
+  void getItemInfo() async {
+    final model1 = Provider.of<InventoryModel>(context, listen: false);
+    model1.getItemLocations(widget.item.data.variations[widget.variation].id);
+    var itemCOA =
+        await model1.getCOA(widget.item.data.variations[widget.variation].id);
+    setState(() {
+      coa = itemCOA;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    //print("variation image id" + widget.item.data.variations[widget.variation].imageId);
-    print("item image id" + widget.item.imageId);
     return Consumer<InventoryModel>(builder: (context, model, _) {
       price = widget.item.data.variations[widget.variation].data.price.amount
           .toString();
@@ -66,7 +75,7 @@ class _ItemPageState extends State<ItemPage> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          model.currentLocationsSet = [];
+                          model.setCurrentItemLocations = [];
                           Navigator.of(context).pop();
                         },
                         child: CustomButton(icon: SFSymbols.chevron_left),
@@ -83,7 +92,7 @@ class _ItemPageState extends State<ItemPage> {
                           GestureDetector(
                               onTap: () {
                                 _editItemModal(
-                                    context, widget.item, widget.variation);
+                                    context, widget.item.id, widget.variation);
                               },
                               child: CustomButton(icon: Icons.mode_edit)),
                         ],
@@ -100,7 +109,7 @@ class _ItemPageState extends State<ItemPage> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          (widget.item.data.variations.length < 2
+                          (widget.item.data.variations == null
                                   ? widget.item.data.name
                                   : widget.item.data
                                       .variations[widget.variation].data.name) +
@@ -113,9 +122,9 @@ class _ItemPageState extends State<ItemPage> {
                                       price.substring(
                                           price.length - 2, price.length)
                                   : " "),
-                          maxLines: 3,
+                          maxLines: 5,
                           style: GoogleFonts.libreFranklin(
-                              fontSize: 28,
+                              fontSize: 26,
                               color: Colors.black87,
                               fontWeight: FontWeight.w600),
                         ),
@@ -157,7 +166,7 @@ class _ItemPageState extends State<ItemPage> {
                                             .variations[widget.variation]
                                             .data
                                             .sku),
-                                    maxLines: 3,
+                                    maxLines: 4,
                                     style: GoogleFonts.libreFranklin(
                                         fontSize: 16,
                                         color: Colors.black26,
@@ -168,7 +177,7 @@ class _ItemPageState extends State<ItemPage> {
                             )
                           : Container(),
                       SizedBox(height: 7),
-                      widget.item.data.variations.length < 2
+                      widget.item.data.variations == null
                           ? Container()
                           : Row(
                               children: <Widget>[
@@ -194,35 +203,49 @@ class _ItemPageState extends State<ItemPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 20),
                 ImageCarouselWidget(
                   id: widget.item.id,
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 15),
+                widget.item.data.description != null &&
+                        !(widget?.item?.data?.description?.isEmpty ?? false)
+                    ? Padding(
+                        padding: const EdgeInsets.only(
+                            left: 25.0, right: 25.0, bottom: 25.0),
+                        child: RichText(
+                          text: TextSpan(
+                            text: widget.item.data.description,
+                            style: GoogleFonts.libreFranklin(
+                                fontSize: 16,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      )
+                    : SizedBox(
+                        width: 1,
+                      ),
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 25.0, right: 25, bottom: 40),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Builder(
-                        builder: (context) =>
-                                             GestureDetector(
-                            onTap: () async {
-                              print("tapped coa");
-                              String coa = await model.getCOA(widget.item.data
-                                  .variations[widget.variation].data.itemId);
-
-                              if (coa != null && coa.isNotEmpty) {
-                                _coaModal(context, coa);
-                              } else {
-                                final snackBar =
-                                    SnackBar(content: Text('No COA Id Found'));
-                                Scaffold.of(context).showSnackBar(snackBar);
-                              }
-                            },
-                            child: ViewCOAReportWidget()),
-                      ),
+                      coa != null
+                          ? GestureDetector(
+                              onTap: () async {
+                                //print("tapped coa");
+                                if (coa != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => COAPage(id: coa)),
+                                  );
+                                }
+                              },
+                              child: ViewCOAReportWidget())
+                          : Container(),
                       SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -249,7 +272,7 @@ class _ItemPageState extends State<ItemPage> {
                         ],
                       ),
                       SizedBox(height: 15),
-                      model.currentLocs == null || model.loading == true
+                      model.currentItemLocationList == null || model.loading == true
                           ? Center(child: CircularProgressIndicator())
                           : ListView.separated(
                               physics: const NeverScrollableScrollPhysics(),
@@ -258,21 +281,21 @@ class _ItemPageState extends State<ItemPage> {
                                   onTap: () {
                                     _locationModal(
                                         context,
-                                        model.currentLocs[index1],
+                                        model.currentItemLocationList[index1],
                                         widget.item.data
                                             .variations[widget.variation]);
                                     //modal w location name and id, xbutton, field where you add new amount and save button.
                                   },
                                   child: AbsorbPointer(
                                       child: LocationContainerWidget(
-                                    name: model.currentLocs[index1].name != null
-                                        ? model.currentLocs[index1].name
-                                        : model.currentLocs[index1].id,
-                                    quantity: model.currentLocs[index1].amount,
+                                    name: model.currentItemLocationList[index1].name != null
+                                        ? model.currentItemLocationList[index1].name
+                                        : model.currentItemLocationList[index1].id,
+                                    quantity: model.currentItemLocationList[index1].amount,
                                   )),
                                 );
                               },
-                              itemCount: model.currentLocs.length,
+                              itemCount: model.currentItemLocationList.length,
                               shrinkWrap: true,
                               separatorBuilder:
                                   (BuildContext context, int index) {
@@ -301,10 +324,7 @@ class _ItemPageState extends State<ItemPage> {
       ),
       context: context,
       isScrollControlled: true,
-      builder: (context) => Container(
-        //height: MediaQuery.of(context).size.height * 0.5,
-        child: LocationModal(location: location, item: item),
-      ),
+      builder: (context) => LocationModal(location: location, item: item),
     );
   }
 
@@ -325,7 +345,7 @@ class _ItemPageState extends State<ItemPage> {
     );
   }
 
-  void _coaModal(BuildContext context, String id) {
+  void _editItemModal(BuildContext context, String id, int variation) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -336,24 +356,7 @@ class _ItemPageState extends State<ItemPage> {
       context: context,
       isScrollControlled: true,
       builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.9,
-        child: COAModal(id: id),
-      ),
-    );
-  }
-
-  void _editItemModal(BuildContext context, Item item, int variation) {
-    showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
-      ),
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => SingleChildScrollView(
-        child: EditItemModal(item: item, variation: variation),
+        child: EditItemModal(id: id, variation: variation),
       ),
     );
   }

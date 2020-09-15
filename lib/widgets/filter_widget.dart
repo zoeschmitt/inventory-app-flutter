@@ -21,7 +21,6 @@ class _FilterWidgetState extends State<FilterWidget> {
   @override
   void initState() {
     super.initState();
-   
   }
 
   @override
@@ -46,7 +45,6 @@ class _FilterWidgetState extends State<FilterWidget> {
               color: Colors.black26,
             ),
             onPressed: () {
-              final model = Provider.of<InventoryModel>(context, listen: false);
               showModalBottomSheet(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -101,18 +99,16 @@ class _FilterWidgetState extends State<FilterWidget> {
                                     // setState(() {
                                     //   _loading = true;
                                     // });
-                                    print("new category set");
-                                    model.catSet = newValue;
-                                    newValue.name == "All"
-                                        ? model.productService(limit: "20")
-                                        : model.productService();
+                                    //print("new category set");
+                                    myModel.setCategory = newValue;
+                                    myModel.productService();
                                     // setState(() {
                                     //   _loading = false;
                                     // });
                                   },
-                                  items: myModel.categories == null
+                                  items: myModel.categoryList == null
                                       ? List<DropdownMenuItem<Category>>()
-                                      : myModel.categories
+                                      : myModel.categoryList
                                           .map((value) => DropdownMenuItem(
                                                 child: Text(
                                                   value.name != null
@@ -156,11 +152,9 @@ class _FilterWidgetState extends State<FilterWidget> {
                                     // setState(() {
                                     //   _loading = true;
                                     // });
-                                    print("new location set");
-                                    model.locationSet = newValue;
-                                    newValue.name == "All"
-                                        ? model.productService(limit: "20")
-                                        : model.productService();
+                                    //print("new location set");
+                                    myModel.setLocation = newValue;
+                                    myModel.productService();
                                     // setState(() {
                                     //   _loading = false;
                                     // });
@@ -181,7 +175,6 @@ class _FilterWidgetState extends State<FilterWidget> {
                           ],
                         );
                       }),
-                      
                     ],
                   ),
                 ),

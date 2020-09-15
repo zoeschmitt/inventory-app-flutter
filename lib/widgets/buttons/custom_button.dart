@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:inventory/utils/styles.dart';
 
 class CustomButton extends StatelessWidget {

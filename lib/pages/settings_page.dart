@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:inventory/pages/modals/privacy_policy_modal.dart';
+import 'package:inventory/pages/privacy_policy_page.dart';
 import 'package:inventory/services/firebase_auth_service.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:inventory/widgets/settings_option.dart';
@@ -62,7 +62,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     )),
                 SizedBox(height: 20),
                 GestureDetector(
-                    onTap: () => _policyModal(context),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PrivacyPolicyPage()),
+                      );
+                    },
                     child: SettingsOption(
                       title: 'Privacy',
                       icon: SFSymbols.shield_fill,
@@ -101,19 +107,4 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-
-  _policyModal(BuildContext context) {
-    showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
-      ),
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => PrivacyPolicyModal(),
-    );
-  }
 }
-

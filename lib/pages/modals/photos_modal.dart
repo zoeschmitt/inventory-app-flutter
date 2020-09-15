@@ -44,7 +44,7 @@ class _PhotosModalState extends State<PhotosModal> {
       setState(() {
         _imageIds = image;
       });
-      print("iamges length " + _imageIds.length.toString());
+      //print("iamges length " + _imageIds.length.toString());
     } catch (e) {
       print(e.toString());
     }
@@ -74,15 +74,16 @@ class _PhotosModalState extends State<PhotosModal> {
                   _selected.add(_imageIds[index]);
                 });
               }
-              print("_selected.length");
-              print(_selected.length);
+              // print("_selected.length");
+              // print(_selected.length);
             },
             child: Container(
               width: length,
               height: length,
               decoration: BoxDecoration(
                 image: DecorationImage(
-        fit: BoxFit.cover, image: NetworkImage(IMG_BASE_URL + _imageIds[index].name)),
+                    fit: BoxFit.cover,
+                    image: NetworkImage(IMG_BASE_URL + _imageIds[index].name)),
                 border: _selected.contains(_imageIds[index])
                     ? Border.all(color: Styles.custBlue, width: 2)
                     : Border(),
@@ -135,10 +136,8 @@ class _PhotosModalState extends State<PhotosModal> {
 
     _images.forEach((element) async {
       try {
-
         dynamic result = await model1.addImage(widget.id, element);
         result == false ? throw Exception() : print("image added");
-        
       } catch (e) {
         _error = "Could Not add Images";
         print(e.toString());
@@ -148,14 +147,6 @@ class _PhotosModalState extends State<PhotosModal> {
     setState(() {
       _error = error;
     });
-
-    _images.forEach((element) {
-      print(element.identifier);
-    });
-
-    //add to data base
-
-    //navigator pop if successful
   }
 
   @override
@@ -212,8 +203,8 @@ class _PhotosModalState extends State<PhotosModal> {
                                   ),
                                 )),
                             onTap: () {
-                              print("in ontap");
-                              print(_selected.length);
+                              // print("in ontap");
+                              // print(_selected.length);
                               _selected.forEach((element) {
                                 try {
                                   dynamic result = model1.deleteImage(

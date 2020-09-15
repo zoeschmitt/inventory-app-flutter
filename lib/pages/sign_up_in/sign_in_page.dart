@@ -31,132 +31,144 @@ class _SignInPageState extends State<SignInPage> {
         : Scaffold(
             backgroundColor: Styles.backgroundCol,
             body: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 25.0, right: 25, top: 20, bottom: 50),
-                  child: Column(
+              child: Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * .85,
+                    child: Column(
+                    //mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       //SizedBox(height: MediaQuery.of(context).size.height / 5),
                       Padding(
-                        padding: const EdgeInsets.only(top: 60, bottom: 60),
-                        child: Icon(
-                          Icons.dashboard,
-                          size: 80,
-                          color: Styles.custBlue,
+                        padding: const EdgeInsets.only(top: 35.0),
+                        child: Text(
+                          "Sign In",
+                          style: GoogleFonts.sourceSansPro(
+                              fontSize: 35,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height / 4.5),
-                      Text(
-                        error,
-                        style: TextStyle(fontSize: 14.0, color: Colors.red),
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(32),
-                            boxShadow: [
-                              BoxShadow(
-                                  offset: const Offset(0.0, 0.0),
-                                  blurRadius: 18.0,
-                                  spreadRadius: 7.0,
-                                  color: Colors.black.withOpacity(0.03)),
-                            ]),
-                        child: Padding(
-                          padding: const EdgeInsets.all(25.0),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              children: <Widget>[
-                                TextFormField(
-                                  //controller: widget.controller,
-                                  //enabled: widget.enabled,
-                                  style: Styles.authStyle,
-                                  textCapitalization: TextCapitalization.none,
-                                  autovalidate: false,
-                                  onChanged: (val) {
-                                    setState(() => email = val);
-                                  },
-                                  //inputFormatters: widget.inputFormatters,
-                                  minLines: 1,
-                                  decoration: Styles.returnDec("Email"),
-                                  validator: (val) =>
-                                      val.isEmpty || !val.contains("@")
-                                          ? 'Enter a valid email'
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            error,
+                            style: TextStyle(fontSize: 14.0, color: Colors.red),
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(32),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: const Offset(0.0, 0.0),
+                                      blurRadius: 18.0,
+                                      spreadRadius: 7.0,
+                                      color: Colors.black.withOpacity(0.03)),
+                                ]),
+                            child: Padding(
+                              padding: const EdgeInsets.all(25.0),
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: <Widget>[
+                                    TextFormField(
+                                      //controller: widget.controller,
+                                      //enabled: widget.enabled,
+                                      style: Styles.authStyle,
+                                      textCapitalization:
+                                          TextCapitalization.none,
+                                      autovalidate: false,
+                                      onChanged: (val) {
+                                        setState(() => email = val);
+                                      },
+                                      //inputFormatters: widget.inputFormatters,
+                                      minLines: 1,
+                                      decoration: Styles.returnDec("Email"),
+                                      validator: (val) =>
+                                          val.isEmpty || !val.contains("@")
+                                              ? 'Enter a valid email'
+                                              : null,
+                                    ),
+                                    SizedBox(height: 15),
+                                    TextFormField(
+                                      obscureText: true,
+                                      //controller: widget.controller,
+                                      //enabled: widget.enabled,
+                                      style: Styles.authStyle,
+                                      textCapitalization:
+                                          TextCapitalization.none,
+                                      autovalidate: false,
+                                      onChanged: (val) {
+                                        setState(() => password = val);
+                                      },
+                                      //inputFormatters: widget.inputFormatters,
+                                      minLines: 1,
+                                      decoration: Styles.returnDec("Password"),
+                                      validator: (val) => val.length < 6
+                                          ? 'Password Invalid'
                                           : null,
+                                    ),
+                                    SizedBox(height: 15),
+                                    MainButton(
+                                      title: "Sign In",
+                                      onPressed: () async {
+                                        if (_formKey.currentState.validate()) {
+                                          print("valid");
+                                          setState(() => loading = true);
+                                          dynamic result = await _auth
+                                              .signInWithEmailAndPassword(
+                                                  email, password);
+                                          if (result == null) {
+                                            setState(() {
+                                              loading = false;
+                                              error =
+                                                  'Could not sign in with those credentials';
+                                            });
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 15),
-                                TextFormField(
-                                  obscureText: true,
-                                  //controller: widget.controller,
-                                  //enabled: widget.enabled,
-                                  style: Styles.authStyle,
-                                  textCapitalization: TextCapitalization.none,
-                                  autovalidate: false,
-                                  onChanged: (val) {
-                                    setState(() => password = val);
-                                  },
-                                  //inputFormatters: widget.inputFormatters,
-                                  minLines: 1,
-                                  decoration: Styles.returnDec("Password"),
-                                  validator: (val) => val.length < 6
-                                      ? 'Password Invalid'
-                                      : null,
-                                ),
-                                SizedBox(height: 15),
-                                MainButton(
-                                  title: "Sign In",
-                                  onPressed: () async {
-                                    if (_formKey.currentState.validate()) {
-                                      print("valid");
-                                      setState(() => loading = true);
-                                      dynamic result = await _auth
-                                          .signInWithEmailAndPassword(
-                                              email, password);
-                                      if (result == null) {
-                                        setState(() {
-                                          loading = false;
-                                          error =
-                                              'Could not sign in with those credentials';
-                                        });
-                                      }
-                                    }
-                                  },
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                // Text(
+                                //   "Forgot Password?",
+                                //   style: GoogleFonts.sourceSansPro(
+                                //       fontSize: 15,
+                                //       color: Colors.black87,
+                                //       fontWeight: FontWeight.w400),
+                                // ),
+                                GestureDetector(
+                                  onTap: () => widget.toggleView(),
+                                  child: Text(
+                                    "Sign Up",
+                                    style: GoogleFonts.sourceSansPro(
+                                        fontSize: 15,
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              "Forgot Password?",
-                              style: GoogleFonts.sourceSansPro(
-                                  fontSize: 15,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            GestureDetector(
-                              onTap: () => widget.toggleView(),
-                              child: Text(
-                                "Sign Up",
-                                style: GoogleFonts.sourceSansPro(
-                                    fontSize: 15,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ],
-                        ),
+                        ],
                       ),
                     ],
+                      ),
                   ),
                 ),
               ),

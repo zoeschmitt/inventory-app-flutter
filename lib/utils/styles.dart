@@ -18,9 +18,9 @@ class Styles {
       hintStyle: authHintStyle,
       contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
       filled: true,
-      fillColor: custBlue.withOpacity(0.1),
+      fillColor: backgroundCol,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: BorderRadius.circular(16.0),
         borderSide: BorderSide.none,
       ),
     );

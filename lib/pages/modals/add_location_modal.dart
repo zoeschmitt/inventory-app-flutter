@@ -73,10 +73,10 @@ class _AddLocationModalState extends State<AddLocationModal> {
                                       ),
                               )),
                           onTap: () async {
-                            print("in ontap");
+                            //print("in ontap");
                             if (_formKey.currentState.validate() &&
                                 model.newLocation.name != "All") {
-                              print("valid");
+                              //print("valid");
                               //setState(() => loading = true);
                               
                               dynamic result = await model.changeInv(
@@ -86,7 +86,7 @@ class _AddLocationModalState extends State<AddLocationModal> {
                               if (result == null || false) {
                                 setState(() {
                                   //loading = false;
-                                  print('Could not update');
+                                  //print('Could not update');
                                   _error = 'Could not update';
                                 });
                               } else {
@@ -140,12 +140,12 @@ class _AddLocationModalState extends State<AddLocationModal> {
                             iconSize: 42,
                             underline: SizedBox(),
                             onChanged: (newValue) {
-                              print("new location set");
-                              model.newLocationSet = newValue;
+                              //print("new location set");
+                              model.setNewItemLocation = newValue;
                             },
-                            items: model.newlocationList == null
+                            items: model.allLocationsList == null
                                 ? List<DropdownMenuItem<Locations>>()
-                                : model.newlocationList
+                                : model.allLocationsList
                                     .map((value) => DropdownMenuItem(
                                           child: Text(
                                             value.name,

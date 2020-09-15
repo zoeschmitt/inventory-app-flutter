@@ -44,7 +44,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           style: GoogleFonts.sourceSansPro(
                         fontSize: 14,
                         color: Colors.black87,
-                        fontWeight: FontWeight.w600),
+                        fontWeight: FontWeight.w500),
         ),
         SizedBox(
           height: 8,
@@ -62,6 +62,7 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
           autovalidate: false,
           inputFormatters: widget.inputFormatters,
           minLines: 1,
+          maxLines: null,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
             filled: true,

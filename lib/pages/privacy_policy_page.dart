@@ -1,22 +1,20 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sfsymbols/flutter_sfsymbols.dart';
 import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
-class PrivacyPolicyModal extends StatefulWidget {
-  final String id;
-
-  const PrivacyPolicyModal({Key key, this.id}) : super(key: key);
-
+class PrivacyPolicyPage extends StatefulWidget {
+  const PrivacyPolicyPage({Key key}) : super(key: key);
   @override
-  _PrivacyPolicyModalState createState() => _PrivacyPolicyModalState();
+  _PrivacyPolicyPageState createState() => _PrivacyPolicyPageState();
 }
 
-class _PrivacyPolicyModalState extends State<PrivacyPolicyModal> {
+class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
   String assetPDFPath = "";
-  bool loaded = false;
+  bool _loaded = false;
 
   @override
   void initState() {
@@ -26,10 +24,15 @@ class _PrivacyPolicyModalState extends State<PrivacyPolicyModal> {
         .then((f) {
       setState(() {
         assetPDFPath = f.path;
-        loaded = true;
-        print(assetPDFPath);
+        _loaded = true;
+        //print(assetPDFPath);
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future<File> getFileFromAsset(String asset) async {
@@ -49,38 +52,39 @@ class _PrivacyPolicyModalState extends State<PrivacyPolicyModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: CustomButton(icon: Icons.clear)),
-              ],
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: CustomButton(icon: SFSymbols.chevron_left),
+                    ),
+                  ]),
             ),
-          ),
-          loaded == true
-              ? Flexible(
-                  fit: FlexFit.tight,
+            SizedBox(height: 50),
+            _loaded
+                ? Container(
+                  height: MediaQuery.of(context).size.height * .8,
                   child: PDFView(
                     filePath: assetPDFPath,
-                    autoSpacing: true,
-                    //fitEachPage: true,
-                    swipeHorizontal: false,
+                    pageSnap: false,
                     onError: (e) {
                       print("error could not render pdf" + e);
                     },
                   ),
                 )
-              : CircularProgressIndicator(),
-        ],
+                : CircularProgressIndicator(),
+          ],
+        ),
       ),
     );
   }

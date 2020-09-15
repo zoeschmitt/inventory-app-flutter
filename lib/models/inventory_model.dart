@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/models/category_model.dart';
 import 'package:inventory/models/item.dart';
+import 'package:inventory/models/single_item.dart';
 import 'package:inventory/services/image_service.dart';
 import 'package:inventory/services/product_service.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-
 import 'item_image_model.dart';
 
 class InventoryModel with ChangeNotifier {
@@ -12,7 +12,7 @@ class InventoryModel with ChangeNotifier {
       Locations(name: "All", id: "0"); //current filtered location - home page
   Category _category =
       Category(name: "All", id: "0"); //current filtered category - home page
-  List<Category> _cats; //current list of categories - home page
+  List<Category> _categories; //current list of categories - home page
   List<Locations> _locations; //current list of locations - home page
   List<Item> _products; //main list of products - home page
   ProductService _service = ProductService();
@@ -20,43 +20,63 @@ class InventoryModel with ChangeNotifier {
   String _search = "  "; //current search text - home page
   bool _isLoading = false;
 
-  List<ItemLocationCount> _currentItemLocs =
+  List<ItemLocationCount> _currentItemLocations =
       []; //list of locations for the add location - item page
   List<Locations>
-      _newlocations; //current list of locations to add a new item to - item page
-  Locations _newlocation = Locations(
+      _allLocations; //current list of locations to add a new item to - item page
+  Locations _newItemLocation = Locations(
       name: "All",
       id: "0"); //current filter to add item to new location - item page
 
-  List<ItemLocationCount> get currentLocs => _currentItemLocs;
+  List<ItemLocationCount> get currentItemLocationList => _currentItemLocations;
   List<Item> get products => _products;
-  List<Category> get categories => _cats;
+  List<Category> get categoryList => _categories;
   List<Locations> get locationList => _locations;
-  List<Locations> get newlocationList => _newlocations;
+  List<Locations> get allLocationsList => _allLocations;
   Locations get location => _location;
-  Locations get newLocation => _newlocation;
   Category get category => _category;
+  Locations get newLocation => _newItemLocation;
   String get search => _search;
   bool get loading => _isLoading;
 
-  set locationSet(Locations loc) => _location = loc;
-  set newLocationSet(Locations loc) {
-    _newlocation = loc;
+  set setLocation(Locations loc) {
+    _location = loc;
     notifyListeners();
   }
 
-  set catSet(Category cat) => _category = cat;
-  set currentLocationsSet(List<ItemLocationCount> locs) =>
-      _currentItemLocs = locs;
+  //set list category
+  set setCategory(Category cat) {
+    _category = cat;
+    notifyListeners();
+  }
+
+  //set the location to add the item to
+  set setNewItemLocation(Locations loc) {
+    _newItemLocation = loc;
+    notifyListeners();
+  }
+
+  //the locations where the current item is present
+  set setCurrentItemLocations(List<ItemLocationCount> locs) =>
+      _currentItemLocations = locs;
 
   InventoryModel() {
-    productService(limit: "20");
-    getCats();
-    getLocations();
+    // productService(limit: "20");
+    // getCats();
+    // getLocations();
+    if (_products?.isEmpty ?? true) {
+      productService(limit: "20");
+    }
+    if (_categories?.isEmpty ?? true) {
+      getCats();
+    }
+    if (_locations?.isEmpty ?? true) {
+      getLocations();
+    }
   }
 
   void searchProds(String prod) {
-    print(prod);
+    //print(prod);
     if (prod.isEmpty) {
       _search = "  ";
     } else if (prod.length < 2) {
@@ -69,27 +89,27 @@ class InventoryModel with ChangeNotifier {
   }
 
   void productService({String limit}) {
-    print("productService");
-    print(_search);
+    // print("productService");
+    // print(_search);
     _service.fetchProducts(_search, limit: limit != null ? limit : null).then(
         (value) {
       if (value.isNotEmpty) {
         print(value[0].id);
       }
-      print("service");
+      //print("service");
       if (location.name != "All" || category.name != "All") {
-        print("filtering");
+        //print("filtering");
 
         if (location.name != "All" && category.name == "All") {
-          print("filtering by loc");
+          //print("filtering by loc");
           _products = _filterByLocation(value);
         } else if (location.name == "All" && category.name != "All") {
           _products = _filterByCat(value);
-          print(_products.length);
-          print("filtered by cat");
+          // print(_products.length);
+          // print("filtered by cat");
         } else {
           _products = _filterByLocation(_filterByCat(value));
-          print("filtered both");
+          //print("filtered both");
         }
       } else {
         _products = value;
@@ -101,23 +121,37 @@ class InventoryModel with ChangeNotifier {
     });
   }
 
-  List<Item> _filterByLocation(List<Item> prods) {
-    print("filter by location");
-    List<Item> pl = [];
-    for (final p in prods) {
-      if (p.data.variations != null) {
-        p.data.variations.forEach((element) {
-          pl = prods
-              .where((prod) => element.locationsPresent.contains(location.id))
-              .toList();
-        });
+  Future<SingleItem> getSingleItem(String id) async {
+    SingleItem item;
+
+    await _service.getSingleItem(id).then((value) {
+      if (value != null) {
+        item = value;
       }
-    }
+    }, onError: (error) {
+      print(error);
+    });
+    return item;
+  }
+
+  List<Item> _filterByLocation(List<Item> prods) {
+    // print("filter by location");
+    // print("filter by location" + location.id);
+    List<Item> pl = [];
+
+    prods.forEach((prod) {
+      if (prod.presentAtAllLocations) {
+        pl.add(prod);
+      } else if (prod.locationsPresent.contains(location.id)) {
+        pl.add(prod);
+      }
+    });
+    
     return pl;
   }
 
   List<Item> _filterByCat(List<Item> prods) {
-    print("filter by category");
+    //print("filter by category");
     List<Item> pl = [];
     prods.forEach((prod) {
       if (prod.data.categoryId != null && prod.data.categoryId == category.id) {
@@ -128,11 +162,11 @@ class InventoryModel with ChangeNotifier {
   }
 
   void getCats() {
-    print("category service");
+    //print("category service");
     _service.getCategories().then((value) {
       if (value.isNotEmpty) {
         _category = value[0];
-        _cats = value;
+        _categories = value;
       }
 
       notifyListeners();
@@ -142,25 +176,25 @@ class InventoryModel with ChangeNotifier {
   }
 
   void getLocations() {
-    print("locations service");
+    //print("locations service");
     _service.getLocations().then((value) {
       if (value.isNotEmpty) {
         _location = value[0];
         _locations = value;
-        _newlocation = value[0];
-        _newlocations = value;
+        _newItemLocation = value[0];
+        _allLocations = value;
       }
 
       notifyListeners();
     }, onError: (error) {
-      print(error);
+      print("error getting locations: " + error);
     });
   }
 
   String getItemCat(String id) {
     String itemCat = " ";
-    if (_cats != null) {
-      _cats.forEach((element) {
+    if (_categories != null) {
+      _categories.forEach((element) {
         if (element.id == id) {
           itemCat = element.name;
         }
@@ -171,15 +205,17 @@ class InventoryModel with ChangeNotifier {
   }
 
   void getItemLocations(String id) {
-    print("location count service");
+    //print("location count service");
     _isLoading = true;
     _service.getLocationQuantities(id).then((value) {
       if (value.isNotEmpty) {
-        _currentItemLocs = value;
+        _currentItemLocations = value;
         if (_locations != null) {
-          _currentItemLocs.forEach((element1) {
+          _currentItemLocations.forEach((element1) {
             _locations.forEach((element) {
               if (element1.id == element.id) {
+                // print(element.id);
+                // print(element.name);
                 element1.name = element.name;
               }
             });
@@ -189,6 +225,7 @@ class InventoryModel with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }, onError: (error) {
+      _isLoading = false;
       print(error);
     });
   }
@@ -196,7 +233,7 @@ class InventoryModel with ChangeNotifier {
   Future<bool> changeInv(
       String itemId, String quantity, String locId, bool add) async {
     bool result = false;
-    print("change inv service");
+    //print("change inv service");
     _isLoading = true;
     _service.updateInventory(itemId, quantity, locId, add).then((value) {
       result = value;
@@ -211,9 +248,9 @@ class InventoryModel with ChangeNotifier {
   }
 
   Future<String> getCOA(String id) async {
-    String coaUrl = "";
+    String coaUrl;
     await _service.getCOAId(id).then((value) {
-      if (value != null || value.isNotEmpty) {
+      if (value != null && (value?.isNotEmpty ?? false)) {
         coaUrl = value;
         print("in model coa: " + coaUrl);
       }
@@ -237,9 +274,9 @@ class InventoryModel with ChangeNotifier {
     return ids;
   }
 
-  Future<bool> updateProd(Item item) async {
+  Future<bool> updateProd(SingleItem item) async {
     bool result = false;
-    print("change inv service");
+    //print("change inv service");
     _isLoading = true;
     await _service.updateProduct(item).then((value) {
       result = value;
@@ -254,7 +291,7 @@ class InventoryModel with ChangeNotifier {
 
   Future<bool> deleteImage(String itemId, String imageName) async {
     bool result = false;
-    print("delete img service");
+    //print("delete img service");
     _isLoading = true;
     await _imageService.deleteImage(itemId, imageName).then((value) {
       result = value;
@@ -267,9 +304,9 @@ class InventoryModel with ChangeNotifier {
     return result;
   }
 
-    Future<bool> addImage(String itemId, Asset asset) async {
+  Future<bool> addImage(String itemId, Asset asset) async {
     bool result = false;
-    print("add img service");
+    //print("add img service");
     _isLoading = true;
     await _imageService.addImage(itemId, asset).then((value) {
       result = value;

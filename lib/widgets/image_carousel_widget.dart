@@ -22,12 +22,13 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
 
   @override
   void initState() {
-    loadImages();
     super.initState();
+    loadImages();
   }
 
   @override
   void dispose() {
+    _isLoading = false;
     super.dispose();
   }
 
@@ -41,7 +42,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
       setState(() {
         _imageIds = image;
       });
-      print("iamges length " + _imageIds.length.toString());
+      //print("iamges length " + _imageIds.length.toString());
     } catch (e) {
       print(e.toString());
     }

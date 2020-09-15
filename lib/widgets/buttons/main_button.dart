@@ -19,7 +19,7 @@ class MainButton extends StatelessWidget {
         Expanded(
           child: FlatButton(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0)),
+                borderRadius: BorderRadius.circular(16.0)),
             color: Styles.custBlue,
             textColor: Colors.white,
             padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),

@@ -10,25 +10,18 @@ class ImageService {
 
   Future<List<ItemImage>> getImageIds(String id) async {
     List<ItemImage> imgs = [];
-    print("item id in image: " + id);
 
     final uri = new Uri.https(BASE_URL, '/api/getItemImage', {"id": id});
-    print(uri);
+    //print(uri);
     Response response = await get(uri);
 
     if (response.statusCode == 200) {
-      print("image response code" + response.statusCode.toString());
+      //print("image response code" + response.statusCode.toString());
 
       if (jsonDecode(response.body) != null) {
         var images = jsonDecode(response.body)['itemImages'] as List;
-        //ids = images.map<String>((m) => m['imageId'] as String).toList();
         imgs = images.map((i) => ItemImage.fromJson(i)).toList();
       }
-
-      if (imgs.isNotEmpty) {
-        print("ids after map" + imgs[0].id);
-      }
-      print("image ids done");
     } else {
       print('Response get iamges status: ${response.statusCode}');
     }
@@ -45,7 +38,7 @@ class ImageService {
 
     if (response.statusCode == 200) {
       status = true;
-      print("delete image done");
+      //print("delete image done");
     } else {
       print('Response delete image status: ${response.statusCode}');
       print('Response dbodyelete image status: ${response.body}');
@@ -60,7 +53,7 @@ class ImageService {
     List<int> imageData = byteData.buffer.asUint8List();
 
     Uri uri = Uri.parse('https://alamoapp.azurewebsites.net/api/addImage');
-    print(itemId);
+    //print(itemId);
 
     MultipartRequest request = MultipartRequest("POST", uri);
 
@@ -73,13 +66,13 @@ class ImageService {
       filename: asset.name + ".jpg",
       contentType: MediaType("image", "jpg"),
     ));
-  print(request.fields);
-  print(request.files[0].contentType);
+  // print(request.fields);
+  // print(request.files[0].contentType);
     var response = await request.send();
-    print(response.reasonPhrase);
+    //print(response.reasonPhrase);
     if (response.statusCode == 200) {
       status = true;
-      print("images added");
+      //print("images added");
     } else {
       print('Add Image Response status: ${response.statusCode}');
     }

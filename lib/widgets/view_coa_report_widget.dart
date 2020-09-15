@@ -20,7 +20,7 @@ class ViewCOAReportWidget extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 16.0, bottom: 16.0, left: 23.0, right: 23.0),
+                  top: 13.0, bottom: 13.0, left: 20.0, right: 20.0),
               child: Row(
                 children: <Widget>[
                   Icon(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:inventory/utils/styles.dart';
 
 class InfoContainerWidget extends StatelessWidget {
   final String label;
