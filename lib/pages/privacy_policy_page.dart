@@ -73,7 +73,7 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
             SizedBox(height: 50),
             _loaded
                 ? Container(
-                  height: MediaQuery.of(context).size.height * .8,
+                  height: MediaQuery.of(context).size.height * .7,
                   child: PDFView(
                     filePath: assetPDFPath,
                     pageSnap: false,

@@ -33,24 +33,24 @@ class _SignUpPageState extends State<SignUpPage> {
             backgroundColor: Styles.backgroundCol,
             body: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: SingleChildScrollView(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * .85,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 35.0),
-                          child: Text(
-                            "Sign Up",
-                            style: GoogleFonts.sourceSansPro(
-                                fontSize: 35,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w600),
-                          ),
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * .85,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 35.0),
+                        child: Text(
+                          "Sign Up",
+                          style: GoogleFonts.sourceSansPro(
+                              fontSize: 35,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w600),
                         ),
-                        Column(
+                      ),
+                      SingleChildScrollView(
+                        child: Column(
                           children: [
                             Text(
                               error,
@@ -174,8 +174,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

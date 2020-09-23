@@ -69,7 +69,8 @@ class ImageService {
   // print(request.fields);
   // print(request.files[0].contentType);
     var response = await request.send();
-    //print(response.reasonPhrase);
+    print(response.reasonPhrase);
+    print(response);
     if (response.statusCode == 200) {
       status = true;
       //print("images added");

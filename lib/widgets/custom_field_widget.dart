@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory/utils/styles.dart';
 
 class CustomFieldWidget extends StatefulWidget {
-  
   final String fieldTitle;
   final bool enabled;
   final TextEditingController controller;
@@ -16,6 +15,7 @@ class CustomFieldWidget extends StatefulWidget {
   final double maxLines;
   final TextCapitalization textCap;
   final TextInputType keyboardType;
+  final TextInputAction textInputAction;
 
   CustomFieldWidget({
     Key key,
@@ -25,7 +25,11 @@ class CustomFieldWidget extends StatefulWidget {
     this.initialText,
     this.valFunc,
     this.inputFormatters,
-    this.maxLines = 1, this.textCap, this.onChanged, this.keyboardType,
+    this.maxLines = 1,
+    this.textCap,
+    this.onChanged,
+    this.keyboardType, 
+    this.textInputAction,
   }) : super(key: key);
   @override
   _CustomFieldWidgetState createState() => _CustomFieldWidgetState();
@@ -42,29 +46,27 @@ class _CustomFieldWidgetState extends State<CustomFieldWidget> {
         Text(
           widget.fieldTitle,
           style: GoogleFonts.sourceSansPro(
-                        fontSize: 14,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500),
+              fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w500),
         ),
         SizedBox(
           height: 8,
         ),
         TextFormField(
+          textInputAction: widget.textInputAction,
           keyboardType: widget.keyboardType,
           initialValue: widget.initialText,
           controller: widget.controller,
           enabled: widget.enabled,
           style: GoogleFonts.sourceSansPro(
-                        fontSize: 16,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w400),
+              fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w400),
           textCapitalization: widget.textCap,
           autovalidate: false,
           inputFormatters: widget.inputFormatters,
           minLines: 1,
           maxLines: null,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+            contentPadding:
+                EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
             filled: true,
             fillColor: Styles.backgroundCol,
             border: OutlineInputBorder(

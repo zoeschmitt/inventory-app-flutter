@@ -14,7 +14,6 @@ class ProductService {
   static const ADD_INV_URL =
       "https://alamoapp.azurewebsites.net/api/AddInventory";
   static const BASE_URL = "alamoapp.azurewebsites.net";
-
   static const UPDATE_URL =
       'https://alamoapp.azurewebsites.net/api/AddUpdateItem';
 
@@ -115,6 +114,7 @@ class ProductService {
     Response response = await get(uri);
 
     if (response.statusCode == 200) {
+      //print(response.body);
       if (jsonDecode(response.body)['counts'] != null) {
         var loc = jsonDecode(response.body)['counts'] as List;
         locQ = loc.map((i) => ItemLocationCount.fromJson(i)).toList();
@@ -123,6 +123,7 @@ class ProductService {
       //print("locQ done");
     } else {
       print('Response locq status: ${response.statusCode}');
+      print(response.body);
     }
 
     return locQ;
@@ -163,7 +164,8 @@ class ProductService {
 
   Future<bool> updateInventory(
       String catId, String quantity, String locId, bool add) async {
-    //print("add" + add.toString());
+    //print("add" + add.toString()) ;
+    //print("quantity " + (add ? "add " : "delete ") + quantity);
     bool result = false;
     Map<String, String> headers = {
       "Content-type": "application/json",
@@ -177,8 +179,10 @@ class ProductService {
       "location_id": locId,
       "occurred_at": DateTime.now().toUtc().toIso8601String()
     });
+    //print(body1);
     Response response =
         await post(ADD_INV_URL, headers: headers, body: body1); //int
+        print(response.body);
     // print(catId);
     // print(quantity);
     // print(locId);

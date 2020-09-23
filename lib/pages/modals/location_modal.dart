@@ -41,25 +41,33 @@ class _LocationModalState extends State<LocationModal> {
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                  child: Column(
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  
                   children: <Widget>[
                     Text(
-                      widget.location.name,
-                      maxLines: 3,
+                      widget.location.name != null &&
+                              (widget?.location?.name?.isNotEmpty ?? false)
+                          ? widget.location.name
+                          : widget.location.id,
+                      maxLines: 4,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.libreFranklin(
-                          fontSize: 30,
+                          fontSize: 24,
                           color: Colors.black87,
                           fontWeight: FontWeight.w600),
-                        ),
+                    ),
                     SizedBox(height: 5.0),
                     Text(
-                      "Id: " + widget.location.id,
+                      widget.location.name != null &&
+                              (widget?.location?.name?.isNotEmpty ?? false)
+                          ? ("Id: " + widget.location.id)
+                          : "",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.libreFranklin(
@@ -70,6 +78,7 @@ class _LocationModalState extends State<LocationModal> {
                   ],
                 ),
               ),
+              SizedBox(width: 5.0),
               Row(
                 children: <Widget>[
                   GestureDetector(
@@ -164,38 +173,43 @@ class _LocationModalState extends State<LocationModal> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width / 4),
                     child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      initialValue: widget.location.amount,
-                      enabled: true,
-                      style: GoogleFonts.sourceSansPro(
-                          fontSize: 16,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w400),
-                      autovalidate: false,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      maxLines: 1,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: 20, right: 20, top: 15, bottom: 15),
-                        filled: true,
-                        fillColor: Styles.backgroundCol,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(9.0),
-                          borderSide: BorderSide.none,
+                        keyboardType: TextInputType.number,
+                        enabled: true,
+                        style: GoogleFonts.sourceSansPro(
+                            fontSize: 16,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w400),
+                        autovalidate: false,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          hintText: widget.location.amount,
+                          hintMaxLines: 1,
+                          hintStyle: GoogleFonts.sourceSansPro(
+                            fontSize: 16,
+                            color: Colors.black38,
+                            fontWeight: FontWeight.w400),
+                          contentPadding: EdgeInsets.only(
+                              left: 20, right: 20, top: 15, bottom: 15),
+                          filled: true,
+                          fillColor: Styles.backgroundCol,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(9.0),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
-                      ),
-                      validator: (val) =>
-                          val.isEmpty ? 'Please enter a number' : null,
-                      onChanged: (val) {
-                        setState(() {
-                          _newQuantity = val;
-                        });
-                      }
-                      // (val) =>
-                      //     setState(() => _newQuantity = val),
-                    ),
+                        validator: (val) =>
+                            val.isEmpty ? 'Please enter a number' : null,
+                        onChanged: (val) {
+                          setState(() {
+                            _newQuantity = val;
+                          });
+                        }
+                        // (val) =>
+                        //     setState(() => _newQuantity = val),
+                        ),
                   ),
                 ],
               ),

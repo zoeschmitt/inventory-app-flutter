@@ -24,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ? print("loaded all")
           : model.productService(
               limit: (model.products.length + 20).toString());
-      ;
+      
     }
   }
 

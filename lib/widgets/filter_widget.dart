@@ -6,6 +6,8 @@ import 'package:inventory/models/inventory_model.dart';
 import 'package:inventory/widgets/modal_title_widget.dart';
 import 'package:provider/provider.dart';
 
+import 'buttons/custom_button.dart';
+
 class FilterWidget extends StatefulWidget {
   const FilterWidget({
     Key key,
@@ -16,11 +18,12 @@ class FilterWidget extends StatefulWidget {
 }
 
 class _FilterWidgetState extends State<FilterWidget> {
-  bool _loading = false;
+  bool _loading;
 
   @override
   void initState() {
     super.initState();
+    _loading = false;
   }
 
   @override
@@ -56,12 +59,40 @@ class _FilterWidgetState extends State<FilterWidget> {
                 isScrollControlled: false,
                 builder: (context) => Padding(
                   padding: const EdgeInsets.only(
-                      top: 25.0, left: 25.0, right: 25.0, bottom: 200.0),
+                      top: 25.0, left: 25.0, right: 25.0, bottom: 80.0),
                   child: Column(
                     //crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      ModalTitleWidget(title: "Filters"),
+                      //ModalTitleWidget(title: "Filters"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Text(
+                                "Filters",
+                                maxLines: 1,
+                                style: GoogleFonts.libreFranklin(
+                                    fontSize: 30,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              _loading
+                                  ? Container(
+                                    height: 20,
+                                    width: 20,
+                                      child: CircularProgressIndicator())
+                                  : Container(),
+                            ],
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: CustomButton(icon: Icons.clear)),
+                        ],
+                      ),
                       //_loading ? Container(child: CircularProgressIndicator()) : Container(),
                       SizedBox(height: 20.0),
                       Consumer<InventoryModel>(//                  <--- Consumer
@@ -96,15 +127,25 @@ class _FilterWidgetState extends State<FilterWidget> {
                                   iconSize: 42,
                                   underline: SizedBox(),
                                   onChanged: (newValue) async {
-                                    // setState(() {
-                                    //   _loading = true;
-                                    // });
+                                    setState(() {
+                                      _loading = true;
+                                      print("loading");
+                                    });
                                     //print("new category set");
-                                    myModel.setCategory = newValue;
-                                    myModel.productService();
-                                    // setState(() {
-                                    //   _loading = false;
-                                    // });
+                                    try {
+                                      myModel.setCategory = newValue;
+                                      await myModel.productService();
+                                      setState(() {
+                                        _loading = false;
+                                        print("not loading");
+                                      });
+                                    } catch (e) {
+                                      print("could not set category");
+                                      setState(() {
+                                        _loading = false;
+                                        print("not loading");
+                                      });
+                                    }
                                   },
                                   items: myModel.categoryList == null
                                       ? List<DropdownMenuItem<Category>>()
@@ -149,15 +190,17 @@ class _FilterWidgetState extends State<FilterWidget> {
                                   iconSize: 42,
                                   underline: SizedBox(),
                                   onChanged: (newValue) async {
-                                    // setState(() {
-                                    //   _loading = true;
-                                    // });
+                                    setState(() {
+                                      _loading = true;
+                                      print("loading");
+                                    });
                                     //print("new location set");
                                     myModel.setLocation = newValue;
                                     myModel.productService();
-                                    // setState(() {
-                                    //   _loading = false;
-                                    // });
+                                    setState(() {
+                                      _loading = false;
+                                      print("not loading");
+                                    });
                                   },
                                   items: myModel.locationList == null
                                       ? List<DropdownMenuItem<Locations>>()

@@ -43,13 +43,16 @@ class _AddLocationModalState extends State<AddLocationModal> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      "Add Location",
-                      maxLines: 2,
-                      style: GoogleFonts.libreFranklin(
-                          fontSize: 30,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w600),
+                    Flexible(
+                      fit: FlexFit.tight,
+                                          child: Text(
+                        "Add Location",
+                        maxLines: 2,
+                        style: GoogleFonts.libreFranklin(
+                            fontSize: 24,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
                     Row(
                       children: <Widget>[
