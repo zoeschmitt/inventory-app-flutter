@@ -70,9 +70,7 @@ class ItemsListWidget extends StatelessWidget {
                                                   : price.length - 1,
                                               price.length))
                                       : (" "),
-                                  imageId: model.products[index].imageId != null
-                                      ? model.products[index].imageId
-                                      : "",
+                                  imageId: model.images[index],
                                 ),
                               ),
                             );

@@ -16,7 +16,7 @@ class ImageCarouselWidget extends StatefulWidget {
 
 class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
   int _current = 0;
-  List<ItemImage> _imageIds = [];
+  List<String> _imageIds = [];
   bool _isLoading = false;
   static const IMG_BASE_URL = 'https://alamo-botanicals-shop.imgix.net/';
 
@@ -38,9 +38,8 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
       setState(() {
         _isLoading = true;
       });
-      var image = await model1.getImageIds(widget.id);
       setState(() {
-        _imageIds = image;
+        _imageIds = model1.images;
       });
       //print("iamges length " + _imageIds.length.toString());
     } catch (e) {
@@ -60,16 +59,17 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
         CarouselSlider.builder(
           options: CarouselOptions(
             enlargeCenterPage: true,
-            height: MediaQuery.of(context).size.height / 5.3,
+            height: MediaQuery.of(context).size.height / 5.1,
             enableInfiniteScroll: false,
-            viewportFraction: 0.6,
+            viewportFraction: 0.9,
+
             onPageChanged: (index, reason) {
               setState(() {
                 _current = index;
               });
             },
           ),
-          itemCount: _imageIds.length > 1 ? _imageIds.length : 1,
+          itemCount: 5,
           itemBuilder: (context, index) {
             return (_imageIds != null && _imageIds.length >= 1)
                 ? Container(
@@ -77,7 +77,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
                     //margin: EdgeInsets.symmetric(horizontal: 1.0),
                     decoration: BoxDecoration(
                       image: DecorationImage(
-        fit: BoxFit.cover, image: NetworkImage(IMG_BASE_URL + _imageIds[index].name)),
+        fit: BoxFit.cover, image: NetworkImage(_imageIds[index])),
                       color: Styles.backgroundCol,
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
@@ -106,10 +106,10 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
         SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          //children: [1, 2, 3, 4, 5].map((url) {
-          children: _imageIds.map((url) {
-            // int index = [1, 2, 3, 4, 5].indexOf(url);
-            int index = _imageIds.indexOf(url);
+          children: [1, 2, 3, 4, 5].map((url) {
+          //children: _imageIds.map((url) {
+             int index = [1, 2, 3, 4, 5].indexOf(url);
+            //int index = _imageIds.indexOf(url);
             return Container(
               width: 8.0,
               height: 8.0,

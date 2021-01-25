@@ -8,14 +8,17 @@ import 'package:inventory/widgets/buttons/main_button.dart';
 import 'package:inventory/widgets/custom_field_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/item.dart';
+
 class EditItemModal extends StatefulWidget {
   final String id;
+  final Item item;
   final int variation;
 
   const EditItemModal({
     Key key,
     this.id,
-    this.variation,
+    this.variation, this.item,
   }) : super(key: key);
 
   @override
@@ -24,7 +27,7 @@ class EditItemModal extends StatefulWidget {
 
 class _EditItemModalState extends State<EditItemModal> {
   String _error = ' ';
-  bool _loading = true;
+  bool _loading = false;
   SingleItem item;
 
   final _formKey = GlobalKey<FormState>();
@@ -44,10 +47,10 @@ class _EditItemModalState extends State<EditItemModal> {
 
   void getItem() async {
     final model1 = Provider.of<InventoryModel>(context, listen: false);
-    var result = await model1.getSingleItem(widget.id);
+    //var result = await model1.getSingleItem(widget.id);
 
     setState(() {
-      item = result;
+     // item = result;
       _loading = false;
     });
     // print("item");
@@ -56,20 +59,7 @@ class _EditItemModalState extends State<EditItemModal> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                  child: Center(
-                      child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50.0),
-                child: CircularProgressIndicator(),
-              ))),
-            ],
-          )
-        : (item != null
-            ? Container(
+    return Container(
                 //height: MediaQuery.of(context).size.height * 0.93,
                 child: Padding(
                   padding:
@@ -88,9 +78,9 @@ class _EditItemModalState extends State<EditItemModal> {
                               Flexible(
                                 fit: FlexFit.tight,
                                 child: Text(
-                                  (item.itemData.variations != null
-                                      ? item.itemData.name
-                                      : item.itemData.variations[widget.variation]
+                                  (widget.item.data.variations != null
+                                      ? widget.item.data.name
+                                      : widget.item.data.variations[widget.variation].data
                                           .name),
                                   maxLines: 3,
                                   style: GoogleFonts.libreFranklin(
@@ -122,11 +112,11 @@ class _EditItemModalState extends State<EditItemModal> {
                                   textCap: TextCapitalization.words,
                                   enabled: true,
                                   fieldTitle: "Item Name",
-                                  initialText: item.itemData.name,
+                                  initialText: widget.item.data.name,
                                   valFunc: (val) =>
                                       val.isEmpty ? 'Please enter a name' : null,
                                   onChanged: (val) =>
-                                      setState(() => item.itemData.name = val),
+                                      setState(() => widget.item.data.name = val),
                                 ),
                                 SizedBox(height: 13),
                                 CustomFieldWidget(
@@ -134,36 +124,34 @@ class _EditItemModalState extends State<EditItemModal> {
                                   textCap: TextCapitalization.words,
                                   enabled: true,
                                   fieldTitle: "Variation Name",
-                                  initialText: item.itemData.variations != null
-                                      ? item.itemData.variations[widget.variation]
+                                  initialText: widget.item.data.variations != null
+                                      ? widget.item.data.variations[widget.variation].data
                                           .name
                                       : "",
                                   valFunc: (val) =>
                                       val.isEmpty ? 'Please enter a name' : null,
-                                  onChanged: (val) => setState(() => item.itemData
-                                      .variations[widget.variation].name = val),
+                                  onChanged: (val) => setState(() => widget.item.data
+                                      .variations[widget.variation].data.name = val),
                                 ),
                                 SizedBox(height: 13),
                                 CustomFieldWidget(
                                   textInputAction: TextInputAction.done,
                                   keyboardType: TextInputType.number,
                                   fieldTitle: "Price",
-                                  inputFormatters: <TextInputFormatter>[
-                                    WhitelistingTextInputFormatter.digitsOnly
-                                  ],
-                                  initialText: item.itemData.variations != null
-                                      ? item.itemData.variations[widget.variation]
-                                          .priceMoney.amount
+                                  
+                                  initialText: widget.item.data.variations != null
+                                      ? widget.item.data.variations[widget.variation].data
+                                          .price.amount
                                           .toString()
                                       : "",
                                   valFunc: (val) => val.isEmpty
                                       ? 'Please enter a valid price'
                                       : null,
-                                  onChanged: (val) => setState(() => item
-                                      .itemData
-                                      .variations[widget.variation]
-                                      .priceMoney
-                                      .amount = int.parse(val)),
+                                  // onChanged: (val) => setState(() => item
+                                  //     .itemData
+                                  //     .variations[widget.variation]
+                                  //     .priceMoney
+                                  //     .amount = int.parse(val)),
                                   textCap: TextCapitalization.words,
                                   enabled: true,
                                 ),
@@ -171,9 +159,7 @@ class _EditItemModalState extends State<EditItemModal> {
                                 CustomFieldWidget(
                                   textInputAction: TextInputAction.done,
                                   fieldTitle: "Description",
-                                  initialText: item.itemData.description != null
-                                      ? item.itemData.description
-                                      : "",
+                                  initialText: "These phytocannabinoid-rich (PCR) hemp oil products are created using full spectrum hemp oil and mixed with coconut oil (MCT) with no added flavor. 250mg / 30ml serving size bottle. Each 1ml dropper contains approximately 10MG CBD.",
                                   onChanged: (val) => setState(
                                       () => item.itemData.description = val),
                                   textCap: TextCapitalization.sentences,
@@ -189,25 +175,25 @@ class _EditItemModalState extends State<EditItemModal> {
                                     if (_formKey.currentState.validate()) {
                                       //print("valid");
                                       //send images
-                                      setState(() {
-                                        _loading = true;
-                                      });
+                                      // setState(() {
+                                      //   _loading = true;
+                                      // });
 
-                                      bool result = await model.updateProd(item);
+                                      // //bool result = await model.updateProd(item);
 
-                                      if (result == null || result == false) {
-                                        setState(() {
-                                          _loading = false;
-                                          //print("Could not update");
-                                          _error = "Could Not Update";
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _loading = false;
-                                        });
-                                        model.productService();
-                                        Navigator.of(context).pop();
-                                      }
+                                      // if (result == null || result == false) {
+                                      //   setState(() {
+                                      //     _loading = false;
+                                      //     //print("Could not update");
+                                      //     _error = "Could Not Update";
+                                      //   });
+                                      // } else {
+                                      //   setState(() {
+                                      //     _loading = false;
+                                      //   });
+                                      //   model.productService();
+                                      //   Navigator.of(context).pop();
+                                      // }
                                     }
                                   },
                                 ),
@@ -220,15 +206,7 @@ class _EditItemModalState extends State<EditItemModal> {
                     ),
                   ),
                 ),
-              )
-            : Container(
-                child: Center(
-                    child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50.0),
-                child: Text(
-                  'Error Retrieving Item',
-                  style: TextStyle(fontSize: 14.0, color: Colors.red),
-                ),
-              ))));
+              
+            );
   }
 }

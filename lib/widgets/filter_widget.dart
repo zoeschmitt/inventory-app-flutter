@@ -18,6 +18,8 @@ class FilterWidget extends StatefulWidget {
 }
 
 class _FilterWidgetState extends State<FilterWidget> {
+  List<String> locations = ['All', 'San Antonio, TX', 'Dallas, TX', 'Austin, TX', 'Houston, TX', 'Boulder, CO', 'Denver, CO', 'Tucson, AZ', 'Pheonix, AZ'];
+  List<String> categories = ['All', 'Tincture', 'Topical', 'Capsules', 'Flower', 'Edibles', 'Skin', 'Pets'];
   bool _loading;
 
   @override
@@ -78,12 +80,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                                     color: Colors.black87,
                                     fontWeight: FontWeight.w600),
                               ),
-                              _loading
-                                  ? Container(
-                                    height: 20,
-                                    width: 20,
-                                      child: CircularProgressIndicator())
-                                  : Container(),
+                              
                             ],
                           ),
                           GestureDetector(
@@ -115,46 +112,25 @@ class _FilterWidgetState extends State<FilterWidget> {
                                 decoration: BoxDecoration(
                                     color: Colors.grey[200],
                                     borderRadius: BorderRadius.circular(14)),
-                                child: DropdownButton<Category>(
+                                child: DropdownButton<String>(
                                   style: GoogleFonts.sourceSansPro(
                                       fontSize: 18,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w400),
                                   isExpanded: true,
                                   hint: Text("Category"),
-                                  value: myModel.category,
+                                  value: "All",
                                   icon: Icon(Icons.arrow_drop_down),
                                   iconSize: 42,
                                   underline: SizedBox(),
                                   onChanged: (newValue) async {
-                                    setState(() {
-                                      _loading = true;
-                                      print("loading");
-                                    });
-                                    //print("new category set");
-                                    try {
-                                      myModel.setCategory = newValue;
-                                      await myModel.productService();
-                                      setState(() {
-                                        _loading = false;
-                                        print("not loading");
-                                      });
-                                    } catch (e) {
-                                      print("could not set category");
-                                      setState(() {
-                                        _loading = false;
-                                        print("not loading");
-                                      });
-                                    }
+                                    
                                   },
-                                  items: myModel.categoryList == null
-                                      ? List<DropdownMenuItem<Category>>()
-                                      : myModel.categoryList
+                                  items: 
+                                      categories
                                           .map((value) => DropdownMenuItem(
                                                 child: Text(
-                                                  value.name != null
-                                                      ? value.name
-                                                      : " ",
+                                                  value,
                                                   style: TextStyle(
                                                       color: Colors.black),
                                                 ),
@@ -178,36 +154,24 @@ class _FilterWidgetState extends State<FilterWidget> {
                                 decoration: BoxDecoration(
                                     color: Colors.grey[200],
                                     borderRadius: BorderRadius.circular(14)),
-                                child: DropdownButton<Locations>(
+                                child: DropdownButton(
                                   style: GoogleFonts.sourceSansPro(
                                       fontSize: 18,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w400),
                                   isExpanded: true,
                                   hint: Text("Location"),
-                                  value: myModel.location,
+                                  value: "All",
                                   icon: Icon(Icons.arrow_drop_down),
                                   iconSize: 42,
                                   underline: SizedBox(),
                                   onChanged: (newValue) async {
-                                    setState(() {
-                                      _loading = true;
-                                      print("loading");
-                                    });
-                                    //print("new location set");
-                                    myModel.setLocation = newValue;
-                                    myModel.productService();
-                                    setState(() {
-                                      _loading = false;
-                                      print("not loading");
-                                    });
+                                    
                                   },
-                                  items: myModel.locationList == null
-                                      ? List<DropdownMenuItem<Locations>>()
-                                      : myModel.locationList
+                                  items: locations
                                           .map((value) => DropdownMenuItem(
                                                 child: Text(
-                                                  value.name,
+                                                  value,
                                                   style: TextStyle(
                                                       color: Colors.black),
                                                 ),

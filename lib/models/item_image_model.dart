@@ -1,20 +1,12 @@
 class ItemImage {
 
-  String id;
-  String name;
+  String url;
 
-  ItemImage({this.id, this.name});
+  ItemImage({this.url});
 
   factory ItemImage.fromJson(Map<String, dynamic> parsedJson) {
     return ItemImage(
-      id: parsedJson['imageId'],
-      name: parsedJson['name'],
+      url: parsedJson['regular'],
     );
   }
-
-  Map<String, dynamic> toJson() =>
-  {
-    'imageId': id,
-    'name': name
-  }; 
 }

@@ -5,6 +5,7 @@ import 'package:inventory/services/firebase_auth_service.dart';
 import 'package:provider/provider.dart';
 
 import 'models/user.dart';
+import 'pages/home_page.dart';
 
 void main() {
   runApp(
@@ -24,7 +25,7 @@ class InventoryApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: AuthPage(),
+        home: MyHomePage(),
       ),
     );
   }

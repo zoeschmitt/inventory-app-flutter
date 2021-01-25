@@ -17,7 +17,7 @@ class PhotosModal extends StatefulWidget {
 
 class _PhotosModalState extends State<PhotosModal> {
   static const IMG_BASE_URL = 'https://alamo-botanicals-shop.imgix.net/';
-  List<ItemImage> _imageIds = [];
+  List<String> _imageIds = [];
   List<ItemImage> _selected = [];
   //List<Asset> _images = List<Asset>();
   String _error = ' ';
@@ -40,9 +40,8 @@ class _PhotosModalState extends State<PhotosModal> {
       setState(() {
         _loading = true;
       });
-      var image = await model1.getImageIds(widget.id);
       setState(() {
-        _imageIds = image;
+        _imageIds = model1.images;
       });
       //print("iamges length " + _imageIds.length.toString());
     } catch (e) {
@@ -65,15 +64,15 @@ class _PhotosModalState extends State<PhotosModal> {
         children: List.generate(_imageIds.length, (index) {
           return GestureDetector(
             onTap: () async {
-              if (_selected.contains(_imageIds[index])) {
-                setState(() {
-                  _selected.remove(_imageIds[index]);
-                });
-              } else {
-                setState(() {
-                  _selected.add(_imageIds[index]);
-                });
-              }
+              // if (_selected.contains(_imageIds[index])) {
+              //   setState(() {
+              //     _selected.remove(_imageIds[index]);
+              //   });
+              // } else {
+              //   setState(() {
+              //     _selected.add(_imageIds[index]);
+              //   });
+              // }
               // print("_selected.length");
               // print(_selected.length);
             },
@@ -83,7 +82,7 @@ class _PhotosModalState extends State<PhotosModal> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(IMG_BASE_URL + _imageIds[index].name)),
+                    image: NetworkImage(IMG_BASE_URL)),
                 border: _selected.contains(_imageIds[index])
                     ? Border.all(color: Styles.custBlue, width: 2)
                     : Border(),
@@ -205,26 +204,26 @@ class _PhotosModalState extends State<PhotosModal> {
                             onTap: () {
                               // print("in ontap");
                               // print(_selected.length);
-                              _selected.forEach((element) {
-                                try {
-                                  dynamic result = model1.deleteImage(
-                                      widget.id, element.name);
+                              // _selected.forEach((element) {
+                                // try {
+                                //   dynamic result = model1.deleteImage(
+                                //       widget.id);
 
-                                  result == false
-                                      ? throw Exception()
-                                      : print("image deleted");
-                                } catch (e) {
-                                  setState(() {
-                                    _error = "Could Not Delete Images";
-                                  });
+                                //   result == false
+                                //       ? throw Exception()
+                                //       : print("image deleted");
+                                // } catch (e) {
+                                //   setState(() {
+                                //     _error = "Could Not Delete Images";
+                                //   });
 
-                                  print(e.toString());
-                                }
-                              });
-                              setState(() {
-                                _selected.clear();
-                              });
-                              loadImages();
+                              //     print(e.toString());
+                              //   }
+                              // });
+                              // setState(() {
+                              //   _selected.clear();
+                              // });
+                  //             loadImages();
                             },
                           )
                         : Container(),

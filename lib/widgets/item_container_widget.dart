@@ -8,7 +8,7 @@ class ItemContainerWidget extends StatelessWidget {
   final String itemName;
   final String amount;
   final String imageId;
-  static const IMG_BASE_URL = 'https://alamo-botanicals-shop.imgix.net/';
+  
 
   const ItemContainerWidget({
     Key key,
@@ -28,7 +28,7 @@ class ItemContainerWidget extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: (imageId != null && imageId.isNotEmpty) ? DecorationImage(
-        fit: BoxFit.cover, image: NetworkImage(IMG_BASE_URL + imageId)) : null,
+        fit: BoxFit.cover, image: NetworkImage(imageId)) : null,
               borderRadius: BorderRadius.all(Radius.circular(15)),
               color: Colors.white,
             ),

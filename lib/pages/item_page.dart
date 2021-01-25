@@ -31,11 +31,13 @@ class _ItemPageState extends State<ItemPage> {
   List<String> images = [];
   SingleItem singleItem = SingleItem();
   String coa;
-
+  List<String> numbers = ['21', '29', '43'];
+  List<String> locations = ['San Antonio, TX', 'Dallas, TX', 'Austin, TX', 'Houston, TX', 'Boulder, CO', 'Denver, CO', 'Tucson, AZ', 'Pheonix, AZ'];
+  List<String> categories = ['Tincture', 'Topical', 'Capsules', 'Flower', 'Edibles', 'Skin', 'Pets'];
   @override
   void initState() {
     super.initState();
-    getItemInfo();
+    //getItemInfo();
   }
 
   @override
@@ -44,13 +46,13 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   void getItemInfo() async {
-    final model1 = Provider.of<InventoryModel>(context, listen: false);
-    model1.getItemLocations(widget.item.data.variations[widget.variation].id);
-    var itemCOA =
-        await model1.getCOA(widget.item.data.variations[widget.variation].id);
-    setState(() {
-      coa = itemCOA;
-    });
+    // final model1 = Provider.of<InventoryModel>(context, listen: false);
+    // model1.getItemLocations(widget.item.data.variations[widget.variation].id);
+    // var itemCOA =
+    //     await model1.getCOA(widget.item.data.variations[widget.variation].id);
+    // setState(() {
+    //   coa = itemCOA;
+    // });
   }
 
   @override
@@ -92,7 +94,7 @@ class _ItemPageState extends State<ItemPage> {
                           GestureDetector(
                               onTap: () {
                                 _editItemModal(
-                                    context, widget.item.id, widget.variation);
+                                    context, widget.item, widget.variation);
                               },
                               child: CustomButton(icon: Icons.mode_edit)),
                         ],
@@ -112,16 +114,7 @@ class _ItemPageState extends State<ItemPage> {
                           (widget.item.data.variations == null
                                   ? widget.item.data.name
                                   : widget.item.data
-                                      .variations[widget.variation].data.name) +
-                              (widget.item.data.variations[widget.variation]
-                                          .data.price !=
-                                      null
-                                  ? " - \$" +
-                                      price.substring(0, price.length - 2) +
-                                      "." +
-                                      price.substring(
-                                          price.length - 2, price.length)
-                                  : " "),
+                                      .variations[widget.variation].data.name),
                           maxLines: 5,
                           style: GoogleFonts.libreFranklin(
                               fontSize: 26,
@@ -130,13 +123,12 @@ class _ItemPageState extends State<ItemPage> {
                         ),
                       ),
                       SizedBox(width: 10),
-                      widget.item.data.categoryId != null
-                          ? SmallContainer(
+                      SmallContainer(
                               text:
-                                  model.getItemCat(widget.item.data.categoryId),
+                                  'Tincture',
                               color: Colors.grey[200],
                             )
-                          : Container()
+                          
                     ],
                   ),
                 ),
@@ -146,9 +138,7 @@ class _ItemPageState extends State<ItemPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      widget.item.data.variations[widget.variation].data.sku !=
-                              null
-                          ? Row(
+                      Row(
                               children: <Widget>[
                                 Icon(
                                   SFSymbols.barcode,
@@ -160,12 +150,7 @@ class _ItemPageState extends State<ItemPage> {
                                   fit: FlexFit.tight,
                                   child: Text(
                                     ("SKU " +
-                                        widget
-                                            .item
-                                            .data
-                                            .variations[widget.variation]
-                                            .data
-                                            .sku),
+                                        '2094582092784'),
                                     maxLines: 4,
                                     style: GoogleFonts.libreFranklin(
                                         fontSize: 16,
@@ -175,7 +160,7 @@ class _ItemPageState extends State<ItemPage> {
                                 ),
                               ],
                             )
-                          : Container(),
+                          ,
                       SizedBox(height: 7),
                       widget.item.data.variations == null
                           ? Container()
@@ -205,35 +190,30 @@ class _ItemPageState extends State<ItemPage> {
                 ),
                 SizedBox(height: 20),
                 ImageCarouselWidget(
-                  id: widget.item.id,
+                  
                 ),
                 SizedBox(height: 15),
-                widget.item.data.description != null &&
-                        !(widget?.item?.data?.description?.isEmpty ?? false)
-                    ? Padding(
+                Padding(
                         padding: const EdgeInsets.only(
                             left: 25.0, right: 25.0, bottom: 25.0),
                         child: RichText(
                           text: TextSpan(
-                            text: widget.item.data.description,
+                            text: "These phytocannabinoid-rich (PCR) hemp oil products are created using full spectrum hemp oil and mixed with coconut oil (MCT) with no added flavor. 250mg / 30ml serving size bottle. Each 1ml dropper contains approximately 10MG CBD.",
                             style: GoogleFonts.libreFranklin(
                                 fontSize: 16,
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
-                      )
-                    : SizedBox(
-                        width: 1,
                       ),
+                    
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 25.0, right: 25, bottom: 40),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      coa != null
-                          ? GestureDetector(
+                      GestureDetector(
                               onTap: () async {
                                 //print("tapped coa");
                                 if (coa != null) {
@@ -245,7 +225,7 @@ class _ItemPageState extends State<ItemPage> {
                                 }
                               },
                               child: ViewCOAReportWidget())
-                          : Container(),
+                          ,
                       SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -272,30 +252,26 @@ class _ItemPageState extends State<ItemPage> {
                         ],
                       ),
                       SizedBox(height: 15),
-                      model.currentItemLocationList == null || model.loading == true
-                          ? Center(child: CircularProgressIndicator())
-                          : ListView.separated(
+                      ListView.separated(
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index1) {
                                 return GestureDetector(
                                   onTap: () {
                                     _locationModal(
                                         context,
-                                        model.currentItemLocationList[index1],
+                                        locations[index1],
                                         widget.item.data
                                             .variations[widget.variation]);
                                     //modal w location name and id, xbutton, field where you add new amount and save button.
                                   },
                                   child: AbsorbPointer(
                                       child: LocationContainerWidget(
-                                    name: model.currentItemLocationList[index1].name != null
-                                        ? model.currentItemLocationList[index1].name
-                                        : model.currentItemLocationList[index1].id,
-                                    quantity: model.currentItemLocationList[index1].amount,
+                                    name: locations[index1],
+                                    quantity: numbers[index1],
                                   )),
                                 );
                               },
-                              itemCount: model.currentItemLocationList.length,
+                              itemCount: 3,
                               shrinkWrap: true,
                               separatorBuilder:
                                   (BuildContext context, int index) {
@@ -314,7 +290,7 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   void _locationModal(
-      BuildContext context, ItemLocationCount location, ItemVariation item) {
+      BuildContext context, String location, ItemVariation item) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -345,7 +321,7 @@ class _ItemPageState extends State<ItemPage> {
     );
   }
 
-  void _editItemModal(BuildContext context, String id, int variation) {
+  void _editItemModal(BuildContext context, Item item, int variation) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -356,7 +332,7 @@ class _ItemPageState extends State<ItemPage> {
       context: context,
       isScrollControlled: true,
       builder: (context) => Container(
-        child: EditItemModal(id: id, variation: variation),
+        child: EditItemModal(item: item, variation: variation),
       ),
     );
   }

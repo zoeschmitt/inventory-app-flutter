@@ -10,7 +10,7 @@ import 'package:inventory/widgets/buttons/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class LocationModal extends StatefulWidget {
-  final ItemLocationCount location;
+  final String location;
   final ItemVariation item;
 
   const LocationModal({Key key, this.location, this.item}) : super(key: key);
@@ -50,10 +50,7 @@ class _LocationModalState extends State<LocationModal> {
                   
                   children: <Widget>[
                     Text(
-                      widget.location.name != null &&
-                              (widget?.location?.name?.isNotEmpty ?? false)
-                          ? widget.location.name
-                          : widget.location.id,
+                      'Austin, TX',
                       maxLines: 4,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
@@ -64,10 +61,7 @@ class _LocationModalState extends State<LocationModal> {
                     ),
                     SizedBox(height: 5.0),
                     Text(
-                      widget.location.name != null &&
-                              (widget?.location?.name?.isNotEmpty ?? false)
-                          ? ("Id: " + widget.location.id)
-                          : "",
+                      '# 238402',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.libreFranklin(
@@ -102,24 +96,24 @@ class _LocationModalState extends State<LocationModal> {
                         )),
                     onTap: () async {
                       //print("in ontap");
-                      if (_formKey.currentState.validate()) {
-                        //print("valid");
-                        //setState(() => loading = true);
-                        //print("new quanitty" + _newQuantity);
-                        dynamic result = await model.changeInv(
-                            widget.item.id,
-                            _newQuantity,
-                            widget.location.id,
-                            add == 0 ? true : false);
-                        if (result == null || false) {
-                          setState(() {
-                            //loading = false;
-                            _error = 'Could not update';
-                          });
-                        } else {
-                          Navigator.of(context).pop();
-                        }
-                      }
+                      // if (_formKey.currentState.validate()) {
+                      //   //print("valid");
+                      //   //setState(() => loading = true);
+                      //   //print("new quanitty" + _newQuantity);
+                      //   dynamic result = await model.changeInv(
+                      //       widget.item.id,
+                      //       _newQuantity,
+                      //       widget.location.id,
+                      //       add == 0 ? true : false);
+                      //   if (result == null || false) {
+                      //     setState(() {
+                      //       //loading = false;
+                      //       _error = 'Could not update';
+                      //     });
+                      //   } else {
+                      //     Navigator.of(context).pop();
+                      //   }
+                      // }
                     },
                   ),
                   SizedBox(width: 15.0),
@@ -179,13 +173,11 @@ class _LocationModalState extends State<LocationModal> {
                             fontSize: 16,
                             color: Colors.black87,
                             fontWeight: FontWeight.w400),
-                        autovalidate: false,
-                        inputFormatters: <TextInputFormatter>[
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
+                        
+                      
                         maxLines: 1,
                         decoration: InputDecoration(
-                          hintText: widget.location.amount,
+                          hintText: '43',
                           hintMaxLines: 1,
                           hintStyle: GoogleFonts.sourceSansPro(
                             fontSize: 16,
