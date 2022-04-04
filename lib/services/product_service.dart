@@ -6,16 +6,16 @@ import 'package:inventory/models/single_item.dart';
 
 class ProductService {
   static const PROD_POST_URL =
-      "https://alamoapp.azurewebsites.net/api/SearchProduct";
+      "https://app.azurewebsites.net/api/SearchProduct";
   static const LOCATION_GET_URL =
-      "https://alamoapp.azurewebsites.net/api/GetAllLocation";
+      "https://app.azurewebsites.net/api/GetAllLocation";
   static const CATEGORY_GET_URL =
-      "https://alamoapp.azurewebsites.net/api/GetAllCategory";
+      "https://app.azurewebsites.net/api/GetAllCategory";
   static const ADD_INV_URL =
-      "https://alamoapp.azurewebsites.net/api/AddInventory";
-  static const BASE_URL = "alamoapp.azurewebsites.net";
+      "https://app.azurewebsites.net/api/AddInventory";
+  static const BASE_URL = "app.azurewebsites.net";
   static const UPDATE_URL =
-      'https://alamoapp.azurewebsites.net/api/AddUpdateItem';
+      'https://app.azurewebsites.net/api/AddUpdateItem';
 
   Future<List<Item>> fetchProducts(String searchProd, {String limit}) async {
     List<Item> prods = [];

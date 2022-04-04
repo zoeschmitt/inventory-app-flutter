@@ -16,7 +16,7 @@ class PhotosModal extends StatefulWidget {
 }
 
 class _PhotosModalState extends State<PhotosModal> {
-  static const IMG_BASE_URL = 'https://alamo-botanicals-shop.imgix.net/';
+  static const IMG_BASE_URL = 'https://shop.imgix.net/';
   List<ItemImage> _imageIds = [];
   List<ItemImage> _selected = [];
   //List<Asset> _images = List<Asset>();

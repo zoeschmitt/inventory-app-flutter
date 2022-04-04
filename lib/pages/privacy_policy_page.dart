@@ -20,7 +20,7 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
   void initState() {
     super.initState();
 
-    getFileFromAsset("assets/AlamoBotanicals-Website-PrivacyPolicy-2020.pdf")
+    getFileFromAsset("assets/PrivacyPolicy-2020.pdf")
         .then((f) {
       setState(() {
         assetPDFPath = f.path;
@@ -41,7 +41,7 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
       var bytes = data.buffer.asUint8List();
       var dir = await getApplicationDocumentsDirectory();
       File file =
-          File("${dir.path}/AlamoBotanicals-Website-PrivacyPolicy-2020.pdf");
+          File("${dir.path}/PrivacyPolicy-2020.pdf");
 
       File assetFile = await file.writeAsBytes(bytes);
       return assetFile;

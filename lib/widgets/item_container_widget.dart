@@ -8,7 +8,7 @@ class ItemContainerWidget extends StatelessWidget {
   final String itemName;
   final String amount;
   final String imageId;
-  static const IMG_BASE_URL = 'https://alamo-botanicals-shop.imgix.net/';
+  static const IMG_BASE_URL = 'https://shop.imgix.net/';
 
   const ItemContainerWidget({
     Key key,

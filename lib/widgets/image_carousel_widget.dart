@@ -18,7 +18,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
   int _current = 0;
   List<ItemImage> _imageIds = [];
   bool _isLoading = false;
-  static const IMG_BASE_URL = 'https://alamo-botanicals-shop.imgix.net/';
+  static const IMG_BASE_URL = 'https://shop.imgix.net/';
 
   @override
   void initState() {

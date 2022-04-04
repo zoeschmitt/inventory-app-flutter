@@ -6,7 +6,7 @@ import 'package:inventory/models/item_image_model.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class ImageService {
-  static const BASE_URL = "alamoapp.azurewebsites.net";
+  static const BASE_URL = "https://app.azurewebsites.net/api";
 
   Future<List<ItemImage>> getImageIds(String id) async {
     List<ItemImage> imgs = [];
@@ -52,7 +52,7 @@ class ImageService {
     ByteData byteData = await asset.getByteData();
     List<int> imageData = byteData.buffer.asUint8List();
 
-    Uri uri = Uri.parse('https://alamoapp.azurewebsites.net/api/addImage');
+    Uri uri = Uri.parse('https://app.azurewebsites.net/api/addImage');
     //print(itemId);
 
     MultipartRequest request = MultipartRequest("POST", uri);
